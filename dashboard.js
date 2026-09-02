@@ -20,7 +20,7 @@ async function loadCount() {
         document
             .getElementById("counter")
             .textContent =
-            `Responses Received: ${data.responses}`;
+            `Participants Completed: ${data.responses}`;
 
         document
             .getElementById("updated")
@@ -311,8 +311,7 @@ async function loadStage() {
                 "currentStage"
             )
             .textContent =
-            "Current Stage: " +
-            data.stage;
+            `Current Stage: ${data.stage}`
 
     }
 
