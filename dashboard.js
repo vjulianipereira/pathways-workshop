@@ -142,11 +142,13 @@ document
 
 loadCount();
 loadResults();
+loadWeights();
 
 setInterval(() => {
 
     loadCount();
     loadResults();
+    loadWeights();
 
 }, 30000);
 
@@ -205,6 +207,77 @@ async function loadResults() {
         document
             .getElementById(
                 "resultsChart"
+            )
+            .innerHTML = html;
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+async function loadWeights() {
+
+    try {
+
+        const response =
+            await fetch(
+                API_BASE +
+                "?action=weights"
+            );
+
+        const data =
+            await response.json();
+
+        let html = "";
+
+        Object.entries(data)
+            .forEach(
+                ([criterion, score]) => {
+
+                const width =
+                    (score / 5) * 100;
+
+                html += `
+
+                    <div class="result-row">
+
+                        <div class="result-label">
+
+                            ${criterion}
+
+                        </div>
+
+                        <div class="result-track">
+
+                            <div
+                                class="result-bar"
+                                style="
+                                width:${width}%;
+                                ">
+                            </div>
+
+                        </div>
+
+                        <div class="result-value">
+
+                            ${score.toFixed(2)}
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            });
+
+        document
+            .getElementById(
+                "weightsChart"
             )
             .innerHTML = html;
 
