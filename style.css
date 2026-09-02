@@ -439,3 +439,47 @@ h3 {
     font-weight: bold;
 
 }
+
+.result-row {
+
+    margin-bottom: 20px;
+
+}
+
+.result-label {
+
+    font-weight: bold;
+
+    margin-bottom: 6px;
+
+}
+
+.result-track {
+
+    height: 24px;
+
+    background: #e5e7eb;
+
+    border-radius: 4px;
+
+    overflow: hidden;
+
+}
+
+.result-bar {
+
+    height: 24px;
+
+    background: #2563eb;
+
+}
+
+.result-value {
+
+    margin-top: 4px;
+
+    font-size: 12px;
+
+    color: #555;
+
+}
