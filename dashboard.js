@@ -147,7 +147,7 @@ loadWeights();
 
 setInterval(() => {
 
-    LoadStage();
+    loadStage();
     loadCount();
     loadResults();
     loadWeights();
