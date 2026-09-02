@@ -517,6 +517,77 @@ async function loadConsensus() {
 
 }
 
+async function loadRobustness() {
+
+    try {
+
+        const response =
+            await fetch(
+                API_BASE +
+                "?action=robustness"
+            );
+
+        const data =
+            await response.json();
+
+        let html = "";
+
+        Object.entries(data)
+            .forEach(
+                ([pathway, values]) => {
+
+                html += `
+
+                    <div class="profile-card">
+
+                        <h3>
+                            ${pathway}
+                        </h3>
+
+                        <p>
+                            Mean Score:
+                            ${values.mean.toFixed(1)}
+                        </p>
+
+                        <p>
+                            Consensus:
+                            ${values.consensus}
+                        </p>
+
+                        <p>
+                            Spread:
+                            ${values.spread.toFixed(1)}
+                        </p>
+
+                        <p>
+                            Robustness:
+                            <strong>
+                                ${values.robustness}
+                            </strong>
+                        </p>
+
+                    </div>
+
+                `;
+
+            });
+
+        document
+            .getElementById(
+                "robustnessChart"
+            )
+            .innerHTML = html;
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
 document
     .getElementById(
         "scoringBtn"
