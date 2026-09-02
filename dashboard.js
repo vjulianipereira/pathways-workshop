@@ -139,6 +139,7 @@ document
             loadResults();
             loadWeights();
             loadUncertainty();
+            loadConsensus();
 
         }
     );
@@ -148,6 +149,7 @@ loadCount();
 loadResults();
 loadWeights();
 loadUncertainty();
+loadConsensus();
 
 async function loadUncertainty() {
 
@@ -242,6 +244,7 @@ setInterval(() => {
     loadResults();
     loadWeights();
     loadUncertainty();
+    loadConsensus();
 
 }, 30000);
 
@@ -438,6 +441,71 @@ async function updateStage(stage) {
             loadStage,
             1000
         );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+async function loadConsensus() {
+
+    try {
+
+        const response =
+            await fetch(
+                API_BASE +
+                "?action=consensus"
+            );
+
+        const data =
+            await response.json();
+
+        let html = "";
+
+        Object.entries(data)
+            .forEach(
+                ([pathway, values]) => {
+
+                html += `
+
+                    <div class="consensus-row">
+
+                        <div class="result-label">
+
+                            ${pathway}
+
+                        </div>
+
+                        <div>
+
+                            Consensus:
+                            <strong>
+                                ${values.consensus}
+                            </strong>
+
+                            |
+
+                            Spread:
+                            ${values.spread.toFixed(1)}
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            });
+
+        document
+            .getElementById(
+                "consensusChart"
+            )
+            .innerHTML = html;
 
     }
 
