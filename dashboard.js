@@ -182,28 +182,32 @@ async function loadUncertainty() {
 
                         </div>
 
-                        <div class="uncertainty-track">
-
-                            <div
-                                class="uncertainty-range"
-                                style="
-                                   left:${values.min}%;
-
-                                   width:${
-                                     values.max -
-                                     values.min
-                                   }%;
-                                ">
+                            <div class="uncertainty-track">
+                            
+                                <div
+                                    class="whisker"
+                                    style="
+                                        left:${values.min}%;
+                                        width:${values.max - values.min}%;
+                                    ">
+                                </div>
+                            
+                                <div
+                                    class="box"
+                                    style="
+                                        left:${values.q1}%;
+                                        width:${values.q3 - values.q1}%;
+                                    ">
+                                </div>
+                            
+                                <div
+                                    class="mean-line"
+                                    style="
+                                        left:${values.mean}%;
+                                    ">
+                                </div>
+                            
                             </div>
-
-                            <div
-                                class="uncertainty-mean"
-                                style="
-                                   left:${values.mean}%;
-                                ">
-                            </div>
-
-                        </div>
 
                         <div class="result-value">
 
