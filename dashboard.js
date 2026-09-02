@@ -140,7 +140,7 @@ document
         }
     );
 
-LoadStage();
+loadStage();
 loadCount();
 loadResults();
 loadWeights();
