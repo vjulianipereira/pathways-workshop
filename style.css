@@ -528,3 +528,49 @@ h3 {
     margin-top: 20px;
 
 }
+
+.uncertainty-row {
+
+    margin-bottom: 25px;
+
+}
+
+.uncertainty-track {
+
+    position: relative;
+
+    height: 24px;
+
+    background: #e5e7eb;
+
+    border-radius: 4px;
+
+}
+
+.uncertainty-range {
+
+    position: absolute;
+
+    top: 0;
+
+    height: 100%;
+
+    background: #93c5fd;
+
+    border: 1px solid #2563eb;
+
+}
+
+.uncertainty-mean {
+
+    position: absolute;
+
+    top: 0;
+
+    width: 3px;
+
+    height: 100%;
+
+    background: #000;
+
+}
