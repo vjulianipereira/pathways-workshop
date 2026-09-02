@@ -596,3 +596,41 @@ h3 {
     margin-bottom: 15px;
 
 }
+
+.whisker {
+
+    position: absolute;
+
+    top: 11px;
+
+    height: 2px;
+
+    background: #2563eb;
+
+}
+
+.box {
+
+    position: absolute;
+
+    top: 4px;
+
+    height: 16px;
+
+    background: #93c5fd;
+
+    border: 1px solid #2563eb;
+
+}
+
+.mean-line {
+
+    position: absolute;
+
+    width: 3px;
+
+    height: 24px;
+
+    background: black;
+
+}
