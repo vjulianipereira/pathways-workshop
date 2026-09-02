@@ -140,12 +140,14 @@ document
         }
     );
 
+LoadStage();
 loadCount();
 loadResults();
 loadWeights();
 
 setInterval(() => {
 
+    LoadStage();
     loadCount();
     loadResults();
     loadWeights();
@@ -290,3 +292,102 @@ async function loadWeights() {
     }
 
 }
+
+async function loadStage() {
+
+    try {
+
+        const response =
+            await fetch(
+                API_BASE +
+                "?action=stage"
+            );
+
+        const data =
+            await response.json();
+
+        document
+            .getElementById(
+                "currentStage"
+            )
+            .textContent =
+            "Current Stage: " +
+            data.stage;
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+async function updateStage(stage) {
+
+    try {
+
+        await fetch(API_BASE, {
+
+            method: "POST",
+
+            mode: "no-cors",
+
+            body: JSON.stringify({
+
+                action: "setStage",
+
+                stage: stage
+
+            })
+
+        });
+
+        setTimeout(
+            loadStage,
+            1000
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+document
+    .getElementById(
+        "scoringBtn"
+    )
+    .addEventListener(
+        "click",
+        () => updateStage(
+            "SCORING"
+        )
+    );
+
+document
+    .getElementById(
+        "weightingBtn"
+    )
+    .addEventListener(
+        "click",
+        () => updateStage(
+            "WEIGHTING"
+        )
+    );
+
+document
+    .getElementById(
+        "completeBtn"
+    )
+    .addEventListener(
+        "click",
+        () => updateStage(
+            "COMPLETE"
+        )
+    );
