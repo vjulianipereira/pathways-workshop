@@ -134,8 +134,11 @@ document
         "click",
         () => {
 
+            loadStage();
             loadCount();
             loadResults();
+            loadWeights();
+            loadUncertainty();
 
         }
     );
@@ -144,6 +147,93 @@ loadStage();
 loadCount();
 loadResults();
 loadWeights();
+loadUncertainty();
+
+async function loadUncertainty() {
+
+    try {
+
+        const response =
+            await fetch(
+                API_BASE +
+                "?action=uncertainty"
+            );
+
+        const data =
+            await response.json();
+
+        let html = "";
+
+        Object.entries(data)
+            .forEach(
+                ([pathway, values]) => {
+
+                html += `
+
+                    <div class="uncertainty-row">
+
+                        <div class="result-label">
+
+                            ${pathway}
+
+                        </div>
+
+                        <div class="uncertainty-track">
+
+                            <div
+                                class="uncertainty-range"
+                                style="
+                                   left:${values.min}%;
+
+                                   width:${
+                                     values.max -
+                                     values.min
+                                   }%;
+                                ">
+                            </div>
+
+                            <div
+                                class="uncertainty-mean"
+                                style="
+                                   left:${values.mean}%;
+                                ">
+                            </div>
+
+                        </div>
+
+                        <div class="result-value">
+
+                            ${values.mean.toFixed(1)}
+
+                            (${values.min.toFixed(1)}
+
+                            -
+
+                            ${values.max.toFixed(1)})
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            });
+
+        document
+            .getElementById(
+                "uncertaintyChart"
+            )
+            .innerHTML = html;
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+    }
+
+}
 
 setInterval(() => {
 
@@ -151,6 +241,7 @@ setInterval(() => {
     loadCount();
     loadResults();
     loadWeights();
+    loadUncertainty();
 
 }, 30000);
 
