@@ -532,6 +532,9 @@ async function loadRobustness() {
 
         const data =
             await response.json();
+        
+        console.log("ROBUSTNESS");
+        console.log(data);
 
         let html = "";
 
