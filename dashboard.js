@@ -135,18 +135,18 @@ document
         () => {
 
             loadCount();
-            loadSummary();
+            loadResults();
 
         }
     );
 
 loadCount();
-loadSummary();
+loadResults();
 
 setInterval(() => {
 
     loadCount();
-    loadSummary();
+    loadResults();
 
 }, 30000);
 
