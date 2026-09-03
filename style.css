@@ -678,9 +678,9 @@ h3 {
 
 .comparison-name {
 
-    width: 220px;
+    width: 260px;
 
-    font-weight: bold;
+    flex-shrink: 0;
 
 }
 
@@ -689,6 +689,8 @@ h3 {
     position: relative;
 
     flex: 1;
+
+    min-width:400px;
 
     height: 24px;
 
@@ -739,14 +741,13 @@ h3 {
 
 .dashboard-grid {
 
-    display: grid;
-
     grid-template-columns:
-        1fr 1fr;
+        repeat(
+            2,
+            minmax(600px, 1fr)
+        );
 
     gap: 25px;
-
-    margin-top: 30px;
 
 }
 
