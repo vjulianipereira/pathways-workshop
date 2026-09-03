@@ -507,6 +507,33 @@ async function submitSurvey() {
 
     try {
 
+        pathways.forEach(pathway => {
+
+            const unweighted =
+                calculateUnweightedAverage(
+                    pathway
+                );
+        
+            const weighted =
+                calculateWeightedAverage(
+                    pathway
+                );
+        
+            results[pathway] = {
+        
+                unweighted:
+                    unweighted,
+        
+                weighted:
+                    weighted,
+        
+                difference:
+                    weighted - unweighted
+        
+            };
+        
+        });
+
         console.log("RESULTS BEING SENT");
         console.log(results);
 
