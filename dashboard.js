@@ -813,3 +813,19 @@ document
             "COMPLETE"
         )
     );
+
+let presentationMode =
+    false;
+
+function togglePresentationMode() {
+
+    presentationMode =
+        !presentationMode;
+
+    document.body
+        .classList
+        .toggle(
+            "presentation-mode"
+        );
+
+}
