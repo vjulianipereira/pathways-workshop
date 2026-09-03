@@ -731,36 +731,68 @@ async function loadUnweighted() {
         Object.entries(data)
             .forEach(
                 ([pathway, score]) => {
-
+                
                 html += `
-
-                    <div class="result-row">
-
-                        <div class="result-label">
-
+                
+                    <div class="comparison-row">
+                
+                        <div class="comparison-name">
+                
                             ${pathway}
-
+                
                         </div>
-
-                        <div class="result-track">
-
+                
+                        <div class="comparison-track">
+                
                             <div
-                                class="result-bar"
+                                class="whisker"
                                 style="
-                                    width:${score}%;
+                                    left:${score.min}%;
+                
+                                    width:${
+                                        score.max -
+                                        score.min
+                                    }%;
                                 ">
                             </div>
-
+                
+                            <div
+                                class="whisker-cap"
+                                style="
+                                    left:${score.min}%;
+                                ">
+                            </div>
+                
+                            <div
+                                class="whisker-cap"
+                                style="
+                                    left:${score.max}%;
+                                ">
+                            </div>
+                
+                            <div
+                                class="box"
+                                style="
+                                    left:${score.q1}%;
+                
+                                    width:${
+                                        score.q3 -
+                                        score.q1
+                                    }%;
+                                ">
+                            </div>
+                
+                            <div
+                                class="mean-line"
+                                style="
+                                    left:${score.mean}%;
+                                ">
+                            </div>
+                
                         </div>
-
-                        <div class="result-value">
-
-                            ${score.toFixed(1)}
-
-                        </div>
-
+                
                     </div>
-
+                
                 `;
 
             });
