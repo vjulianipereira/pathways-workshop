@@ -598,9 +598,9 @@ h3 {
 
     position: absolute;
 
-    top: 4px;
+    top: 5px;
 
-    height: 16px;
+    height: 24px;
 
     background: #93c5fd;
 
@@ -612,9 +612,11 @@ h3 {
 
     position: absolute;
 
-    width: 3px;
+    top: 0;
 
-    height: 24px;
+    width: 4px;
+
+    height: 34px;
 
     background: black;
 
@@ -682,7 +684,7 @@ h3 {
 
     gap: 15px;
 
-    margin-bottom: 20px;
+    margin-bottom: 35px;
 
 }
 
@@ -702,7 +704,7 @@ h3 {
 
     min-width:400px;
 
-    height: 24px;
+    height: 34px;
 
     background: #e5e7eb;
 
@@ -773,7 +775,7 @@ h3 {
 
     padding: 20px;
 
-    min-height: 450px;
+    min-height: 500px;
 
 }
 
