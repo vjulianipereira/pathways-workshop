@@ -33,8 +33,9 @@ h3 {
 
 .card {
     background: white;
-    max-width: 900px;
-    margin: 0 auto;
+    width: 95%;
+    max-width: 1800px;
+    margin: 20px auto;
     padding: 30px;
     border-radius: 16px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
