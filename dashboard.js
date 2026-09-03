@@ -376,33 +376,27 @@ async function loadWeights() {
 
                 html += `
 
-                    <div class="result-row">
+                    <div class="comparison-row">
 
-                        <div class="result-label">
-
+                        <div class="comparison-name">
+                    
                             ${criterion}
-
+                            (${score.toFixed(2)})
+                    
                         </div>
-
-                        <div class="result-track">
-
+                    
+                        <div class="comparison-track">
+                    
                             <div
-                                class="result-bar"
+                                class="mean-line"
                                 style="
-                                width:${width}%;
+                                    left:${(score / 5) * 100}%;
                                 ">
                             </div>
-
+                    
                         </div>
-
-                        <div class="result-value">
-
-                            ${score.toFixed(2)}
-
-                        </div>
-
+                    
                     </div>
-
                 `;
 
             });
