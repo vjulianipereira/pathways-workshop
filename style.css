@@ -648,3 +648,17 @@ h3 {
     background: #000;
 
 }
+
+.whisker-cap {
+
+    position: absolute;
+
+    top: 4px;
+
+    width: 2px;
+
+    height: 16px;
+
+    background: #2563eb;
+
+}
