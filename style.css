@@ -833,3 +833,21 @@ h3 {
     font-size: 12px;
 
 }
+
+.mcm-scale,
+.mcm-scale-5 {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-left: 260px;
+
+    margin-top: 25px;
+
+    color: #666;
+
+    font-size: 24px;
+
+}
+
