@@ -312,6 +312,22 @@ h3 {
 
 }
 
+.comparison-axis {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-left: 220px;
+
+    margin-top: 15px;
+
+    color: #666;
+
+    font-size: 14px;
+
+}
+
 .criteria-column {
 
     width: 180px;
@@ -696,9 +712,16 @@ h3 {
 
     flex: 1;
 
-    min-width: 0;
+    height: 40px;
 
-    height: 34px;
+    background-image:
+        repeating-linear-gradient(
+            to right,
+            transparent,
+            transparent calc(25% - 1px),
+            #d8d8d8 calc(25% - 1px),
+            #d8d8d8 25%
+        );
 
 }
 
