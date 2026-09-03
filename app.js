@@ -507,6 +507,9 @@ async function submitSurvey() {
 
     try {
 
+        console.log("RESULTS BEING SENT");
+        console.log(results);
+
         await fetch(API_URL, {
 
     method: "POST",
