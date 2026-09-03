@@ -662,3 +662,37 @@ h3 {
     background: #2563eb;
 
 }
+
+.comparison-row {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+
+}
+
+.comparison-name {
+
+    width: 220px;
+
+    font-weight: bold;
+
+}
+
+.comparison-track {
+
+    position: relative;
+
+    flex: 1;
+
+    height: 24px;
+
+    background: #e5e7eb;
+
+    border-radius: 4px;
+
+}
