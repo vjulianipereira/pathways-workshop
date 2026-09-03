@@ -620,6 +620,92 @@ async function loadRobustness() {
 
 }
 
+async function loadComparison() {
+
+    try {
+
+        const response =
+            await fetch(
+                API_BASE +
+                "?action=uncertainty"
+            );
+
+        const data =
+            await response.json();
+
+        let html = "";
+
+        Object.entries(data)
+            .forEach(
+                ([pathway, values]) => {
+
+                html += `
+
+                    <div class="comparison-row">
+
+                        <div class="comparison-name">
+
+                            ${pathway}
+
+                        </div>
+
+                        <div class="comparison-track">
+
+                            <div
+                                class="whisker"
+                                style="
+                                    left:${values.min}%;
+
+                                    width:${
+                                        values.max -
+                                        values.min
+                                    }%;
+                                ">
+                            </div>
+
+                            <div
+                                class="box"
+                                style="
+                                    left:${values.q1}%;
+
+                                    width:${
+                                        values.q3 -
+                                        values.q1
+                                    }%;
+                                ">
+                            </div>
+
+                            <div
+                                class="mean-line"
+                                style="
+                                    left:${values.mean}%;
+                                ">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            });
+
+        document
+            .getElementById(
+                "comparisonChart"
+            )
+            .innerHTML = html;
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
 document
     .getElementById(
         "scoringBtn"
