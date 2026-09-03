@@ -696,3 +696,24 @@ h3 {
     border-radius: 4px;
 
 }
+
+.presentation-mode
+#uncertaintySection {
+
+    display: none;
+
+}
+
+.presentation-mode
+#consensusSection {
+
+    display: none;
+
+}
+
+.presentation-mode
+#profilesSection {
+
+    display: none;
+
+}
