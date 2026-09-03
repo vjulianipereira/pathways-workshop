@@ -586,11 +586,11 @@ h3 {
 
     position: absolute;
 
-    top: 11px;
+    top: 19px;
 
     height: 2px;
 
-    background: #2563eb;
+    background: black;
 
 }
 
@@ -598,13 +598,13 @@ h3 {
 
     position: absolute;
 
-    top: 5px;
+    top: 8px;
 
     height: 24px;
 
-    background: #93c5fd;
+    background: white;
 
-    border: 1px solid #2563eb;
+    border: 2px solid black;
 
 }
 
@@ -612,11 +612,11 @@ h3 {
 
     position: absolute;
 
-    top: 0;
+    top: 6px;
 
-    width: 4px;
+    width: 3px;
 
-    height: 34px;
+    height: 28px;
 
     background: black;
 
@@ -666,13 +666,13 @@ h3 {
 
     position: absolute;
 
-    top: 4px;
+    top: 12px;
 
     width: 2px;
 
     height: 16px;
 
-    background: #2563eb;
+    background: black;
 
 }
 
@@ -694,21 +694,20 @@ h3 {
 
     flex-shrink: 0;
 
+    font-size: 1.8rem;
+
 }
 
 .comparison-track {
 
-    position: relative;
-
-    flex: 1;
-
-    min-width:400px;
-
-    height: 34px;
-
-    background: #e5e7eb;
-
-    border-radius: 4px;
+    background-image:
+        repeating-linear-gradient(
+            to right,
+            transparent,
+            transparent calc(25% - 1px),
+            #d0d0d0 calc(25% - 1px),
+            #d0d0d0 25%
+        );
 
 }
 
