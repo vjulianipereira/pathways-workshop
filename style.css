@@ -682,32 +682,39 @@ h3 {
 
     align-items: center;
 
-    gap: 25px;
+    gap: 15px;
 
-    margin-bottom: 55px;
+    margin-bottom: 40px;
 
 }
 
 .comparison-name {
 
-    width: 260px;
+    width: 180px;
 
     flex-shrink: 0;
 
-    font-size: 1.8rem;
+    font-size: 1rem;
+
+    line-height: 1.2;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
 
 }
 
 .comparison-track {
 
-    background-image:
-        repeating-linear-gradient(
-            to right,
-            transparent,
-            transparent calc(25% - 1px),
-            #d0d0d0 calc(25% - 1px),
-            #d0d0d0 25%
-        );
+    position: relative;
+
+    flex: 1;
+
+    min-width: 0;
+
+    height: 34px;
 
 }
 
@@ -774,7 +781,11 @@ h3 {
 
     padding: 20px;
 
-    min-height: 500px;
+    min-height: 520px;
+
+    display: flex;
+
+    flex-direction: column;
 
 }
 
