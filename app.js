@@ -23,6 +23,8 @@ const participantId =
     "P" + Date.now();
 let taskCompleted = false;
 
+let pollingInterval = null;
+
 window.onload = function () {
 
     showWelcomeScreen();
@@ -246,15 +248,28 @@ function startStagePolling() {
 
     checkStage();
 
-    setInterval(
-        checkStage,
-        15000
-    );
+    if (pollingInterval) {
+
+        clearInterval(
+            pollingInterval
+        );
+
+    }
+
+    pollingInterval =
+        setInterval(
+            checkStage,
+            15000
+        );
 
 }
 
 async function checkStage() {
-
+    if (taskCompleted) {
+    
+        return;
+    
+    }
     try {
 
         const response =
@@ -629,6 +644,14 @@ async function submitSurvey() {
 });
         
         taskCompleted = true;
+
+                if (pollingInterval) {
+        
+            clearInterval(
+                pollingInterval
+            );
+        
+        }
         
         // localStorage.setItem(
         //     "surveySubmitted",
