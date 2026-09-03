@@ -141,6 +141,7 @@ document
             loadUncertainty();
             loadConsensus();
             loadRobustness();
+            loadComparison();
 
         }
     );
@@ -152,6 +153,7 @@ loadWeights();
 loadUncertainty();
 loadConsensus();
 loadRobustness();
+loadComparison();
 
 async function loadUncertainty() {
 
@@ -274,6 +276,7 @@ setInterval(() => {
     loadUncertainty();
     loadConsensus();
     loadRobustness();
+    loadComparison();
 
 }, 30000);
 
