@@ -136,18 +136,21 @@ document
 
             loadStage();
             loadCount();
+            loadUnweighted();
             loadResults();
             loadWeights();
             loadUncertainty();
             loadConsensus();
             loadRobustness();
             loadComparison();
+            
 
         }
     );
 
 loadStage();
 loadCount();
+loadUnweighted();
 loadResults();
 loadWeights();
 loadUncertainty();
@@ -271,6 +274,7 @@ setInterval(() => {
 
     loadStage();
     loadCount();
+    loadUnweighted();
     loadResults();
     loadWeights();
     loadUncertainty();
@@ -696,6 +700,74 @@ async function loadComparison() {
         document
             .getElementById(
                 "comparisonChart"
+            )
+            .innerHTML = html;
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+async function loadUnweighted() {
+
+    try {
+
+        const response =
+            await fetch(
+                API_BASE +
+                "?action=unweighted"
+            );
+
+        const data =
+            await response.json();
+
+        let html = "";
+
+        Object.entries(data)
+            .forEach(
+                ([pathway, score]) => {
+
+                html += `
+
+                    <div class="result-row">
+
+                        <div class="result-label">
+
+                            ${pathway}
+
+                        </div>
+
+                        <div class="result-track">
+
+                            <div
+                                class="result-bar"
+                                style="
+                                    width:${score}%;
+                                ">
+                            </div>
+
+                        </div>
+
+                        <div class="result-value">
+
+                            ${score.toFixed(1)}
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            });
+
+        document
+            .getElementById(
+                "unweightedChart"
             )
             .innerHTML = html;
 
