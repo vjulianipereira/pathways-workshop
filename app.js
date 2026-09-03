@@ -29,6 +29,16 @@ window.onload = function () {
 
     showWelcomeScreen();
 
+        if (
+        localStorage.getItem(
+            "taskCompleted"
+        )
+    ) {
+    
+        taskCompleted = true;
+    
+    }
+
 };
 
 function showWelcomeScreen() {
@@ -355,7 +365,12 @@ function renderWaitingRoom() {
 }
 
 function renderWeightingPage() {
-
+    
+        if (taskCompleted) {
+    
+        return;
+    
+    }
     const survey =
         document.getElementById("survey");
 
@@ -623,27 +638,24 @@ async function submitSurvey() {
         );
 
 
-        await fetch(API_URL, {
-
-    method: "POST",
-
-    mode: "no-cors",
-
-    body: JSON.stringify({
-    
-        participantId,
-    
-        responses,
-    
-        weights,
-    
-        results
-    
-    })
-
-});
-        
         taskCompleted = true;
+        
+        if (pollingInterval) {
+        
+            clearInterval(
+                pollingInterval
+            );
+        
+        }
+        
+        await fetch(API_URL, {
+        
+            method: "POST",
+        
+            mode: "no-cors",
+        
+            ...
+        });
 
                 if (pollingInterval) {
         
@@ -653,10 +665,10 @@ async function submitSurvey() {
         
         }
         
-        // localStorage.setItem(
-        //     "surveySubmitted",
-        //     "true"
-        // );
+         localStorage.setItem(
+             "surveySubmitted",
+             "true"
+         );
         survey.innerHTML = `
             <div class="card">
         
