@@ -182,13 +182,17 @@ async function loadUncertainty() {
 
                         </div>
 
-                            <div class="uncertainty-track">
-                            
+                           <div class="uncertainty-track">
+
                                 <div
                                     class="whisker"
                                     style="
                                         left:${values.min}%;
-                                        width:${values.max - values.min}%;
+                            
+                                        width:${
+                                            values.max -
+                                            values.min
+                                        }%;
                                     ">
                                 </div>
                             
@@ -196,7 +200,11 @@ async function loadUncertainty() {
                                     class="box"
                                     style="
                                         left:${values.q1}%;
-                                        width:${values.q3 - values.q1}%;
+                            
+                                        width:${
+                                            values.q3 -
+                                            values.q1
+                                        }%;
                                     ">
                                 </div>
                             
