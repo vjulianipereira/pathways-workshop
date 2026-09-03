@@ -735,3 +735,70 @@ h3 {
     border-radius: 0;
 
 }
+
+.dashboard-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 25px;
+
+    margin-top: 30px;
+
+}
+
+.dashboard-panel {
+
+    background: #eef4fb;
+
+    border-radius: 12px;
+
+    padding: 20px;
+
+    min-height: 300px;
+
+}
+
+.dashboard-panel h2 {
+
+    text-align: center;
+
+    margin-top: 0;
+
+    margin-bottom: 25px;
+
+}
+
+#currentStage {
+
+    display: inline-block;
+
+    margin-right: 30px;
+
+    font-size: 20px;
+
+    font-weight: bold;
+
+    background: transparent;
+
+    border: none;
+
+}
+
+.dashboard-panel {
+
+    min-height: 420px;
+
+}
+
+@media (max-width: 1200px) {
+
+    .dashboard-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
