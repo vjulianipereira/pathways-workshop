@@ -640,6 +640,11 @@ async function loadComparison() {
             .forEach(
                 ([pathway, values]) => {
 
+                    console.log(
+                        pathway,
+                        values
+                    );
+
                 html += `
 
                     <div class="comparison-row">
@@ -725,6 +730,11 @@ async function loadUnweighted() {
         Object.entries(data)
             .forEach(
                 ([pathway, score]) => {
+
+                console.log(
+                    pathway,
+                    score
+                );
                 
                 html += `
                 
