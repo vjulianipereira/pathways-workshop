@@ -32,13 +32,29 @@ h3 {
 /* ===== CARD ===== */
 
 .card {
+
     background: white;
-    width: 95%;
+
+    width: 95vw;
+
     max-width: 1800px;
+
     margin: 20px auto;
+
     padding: 30px;
+
     border-radius: 16px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+
+    box-shadow:
+        0 4px 14px
+        rgba(0,0,0,0.08);
+
+}
+
+.dashboard-grid {
+
+    border: 2px solid red;
+
 }
 
 /* ===== CRITERIA ===== */
@@ -741,6 +757,8 @@ h3 {
 
 .dashboard-grid {
 
+    display: grid;
+
     grid-template-columns:
         repeat(
             2,
@@ -748,6 +766,8 @@ h3 {
         );
 
     gap: 25px;
+
+    margin-top: 30px;
 
 }
 
@@ -759,7 +779,7 @@ h3 {
 
     padding: 20px;
 
-    min-height: 300px;
+    min-height: 350px;
 
 }
 
