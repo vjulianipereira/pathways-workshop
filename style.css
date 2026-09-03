@@ -51,12 +51,6 @@ h3 {
 
 }
 
-.dashboard-grid {
-
-    border: 2px solid red;
-
-}
-
 /* ===== CRITERIA ===== */
 
 .criterion {
@@ -779,7 +773,7 @@ h3 {
 
     padding: 20px;
 
-    min-height: 350px;
+    min-height: 450px;
 
 }
 
@@ -789,7 +783,7 @@ h3 {
 
     margin-top: 0;
 
-    margin-bottom: 25px;
+    margin-bottom: 30px;
 
 }
 
