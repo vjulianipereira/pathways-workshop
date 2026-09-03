@@ -781,6 +781,22 @@ async function loadUnweighted() {
 
 }
 
+let presentationMode =
+    false;
+
+function togglePresentationMode() {
+
+    presentationMode =
+        !presentationMode;
+
+    document.body
+        .classList
+        .toggle(
+            "presentation-mode"
+        );
+
+}
+
 document
     .getElementById(
         "scoringBtn"
@@ -814,18 +830,11 @@ document
         )
     );
 
-let presentationMode =
-    false;
-
-function togglePresentationMode() {
-
-    presentationMode =
-        !presentationMode;
-
-    document.body
-        .classList
-        .toggle(
-            "presentation-mode"
-        );
-
-}
+document
+    .getElementById(
+        "presentationBtn"
+    )
+    .addEventListener(
+        "click",
+        togglePresentationMode
+    );
