@@ -820,3 +820,17 @@ h3 {
     }
 
 }
+
+.chart-scale {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-top: 20px;
+
+    color: #666;
+
+    font-size: 12px;
+
+}
