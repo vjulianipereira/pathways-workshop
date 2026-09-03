@@ -494,6 +494,64 @@ function attachWeightEvents() {
 
 }
 
+function calculateUnweightedAverage(pathway) {
+
+    let total = 0;
+
+    let count = 0;
+
+    criteria.forEach(criterion => {
+
+        const score =
+            responses[pathway][criterion];
+
+        const midpoint =
+            (
+                score.min +
+                score.max
+            ) / 2;
+
+        total += midpoint;
+
+        count++;
+
+    });
+
+    return total / count;
+
+}
+
+function calculateWeightedAverage(pathway) {
+
+    let totalWeightedScore = 0;
+
+    let totalWeight = 0;
+
+    criteria.forEach(criterion => {
+
+        const weight =
+            weights[criterion];
+
+        const score =
+            responses[pathway][criterion];
+
+        const midpoint =
+            (
+                score.min +
+                score.max
+            ) / 2;
+
+        totalWeightedScore +=
+            midpoint * weight;
+
+        totalWeight += weight;
+
+    });
+
+    return totalWeightedScore / totalWeight;
+
+}
+
 async function submitSurvey() {
 
     const survey =
@@ -536,6 +594,19 @@ async function submitSurvey() {
 
         console.log("RESULTS BEING SENT");
         console.log(results);
+
+        console.log(
+            "RESULTS POPULATED"
+        );
+        
+        console.log(
+            JSON.stringify(
+                results,
+                null,
+                2
+            )
+        );
+
 
         await fetch(API_URL, {
 
