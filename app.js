@@ -311,6 +311,16 @@ async function checkStage() {
             !taskCompleted
         ) {
         
+            if (pollingInterval) {
+        
+                clearInterval(
+                    pollingInterval
+                );
+        
+                pollingInterval = null;
+        
+            }
+        
             renderWeightingPage();
         
         }
@@ -646,6 +656,8 @@ async function submitSurvey() {
                 pollingInterval
             );
         
+            pollingInterval = null;
+        
         }
         
         await fetch(API_URL, {
@@ -654,7 +666,18 @@ async function submitSurvey() {
         
             mode: "no-cors",
         
-            ...
+            body: JSON.stringify({
+        
+                participantId,
+        
+                responses,
+        
+                weights,
+        
+                results
+        
+            })
+        
         });
 
                 if (pollingInterval) {
