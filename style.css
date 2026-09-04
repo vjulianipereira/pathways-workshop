@@ -612,54 +612,6 @@ h3 {
 
 }
 
-.box {
-
-    position: absolute;
-
-    top: 8px;
-
-    min-width: 12px;
-
-    height: 22px;
-
-    background: white;
-
-    border: 2px solid black;
-
-    z-index: 3;
-
-}
-
-.box {
-
-    position: absolute;
-
-    top: 4px;
-
-    height: 16px;
-
-    background: #93c5fd;
-
-    border: 1px solid #2563eb;
-
-}
-
-.mean-line {
-
-    position: absolute;
-
-    top: 6px;
-
-    width: 3px;
-
-    height: 26px;
-
-    background: black;
-
-    z-index: 4;
-
-}
-
 .whisker-cap {
 
     position: absolute;
@@ -673,6 +625,40 @@ h3 {
     background: black;
 
     z-index: 2;
+
+}
+
+.box {
+
+    position: absolute;
+
+    top: 8px;
+
+    min-width: 12px;
+
+    height: 22px;
+
+    background: white;
+
+    border: 2px solid #2563eb;
+
+    z-index: 3;
+
+}
+
+.mean-line {
+
+    position: absolute;
+
+    top: 4px;
+
+    width: 3px;
+
+    height: 30px;
+
+    background: black;
+
+    z-index: 4;
 
 }
 
