@@ -554,6 +554,17 @@ async function loadComparison() {
 
                     console.log(
                         pathway,
+                        {
+                            min: values.min,
+                            q1: values.q1,
+                            mean: values.mean,
+                            q3: values.q3,
+                            max: values.max
+                        }
+                    );
+
+                    console.log(
+                        pathway,
                         values
                     );
 
@@ -635,15 +646,6 @@ async function loadComparison() {
         console.error(error);
 
     }
-
-    console.log(
-          pathway,
-          values.min,
-          values.q1,
-          values.mean,
-          values.q3,
-          values.max
-        );
 }
 
 async function loadUnweighted() {
@@ -664,6 +666,17 @@ async function loadUnweighted() {
         Object.entries(data)
             .forEach(
                 ([pathway, score]) => {
+
+                    console.log(
+                    pathway,
+                    {
+                        min: values.min,
+                        q1: values.q1,
+                        mean: values.mean,
+                        q3: values.q3,
+                        max: values.max
+                    }
+                );
 
                 console.log(
                     pathway,
