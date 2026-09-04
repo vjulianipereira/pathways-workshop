@@ -568,36 +568,50 @@ async function loadComparison() {
                         </div>
 
                         <div class="comparison-track">
-
-                            <div
-                                class="whisker"
-                                style="
-                                    left:${values.min}%;
-
-                                    width:${
-                                        values.max -
-                                        values.min
-                                    }%;
-                                ">
-                            </div>
-
-                            <div
-                                class="box"
-                                style="
-                                    left:${values.q1}%;
-
-                                    width:${
-                                        values.q3 -
-                                        values.q1
-                                    }%;
-                                ">
-                            </div>
-
-                            <div
-                                class="mean-line"
-                                style="
-                                    left:${values.mean}%;
-                                ">
+                            
+                                <div
+                                    class="whisker"
+                                    style="
+                                        left:${values.min}%;
+                            
+                                        width:${values.max - values.min}%;
+                                    ">
+                                </div>
+                        
+                            
+                                <div
+                                    class="whisker-cap"
+                                    style="
+                                        left:${values.min}%;
+                                    ">
+                                </div>
+                            
+                            
+                                <div
+                                    class="whisker-cap"
+                                    style="
+                                        left:${values.max}%;
+                                    ">
+                                </div>
+                            
+                            
+                                <div
+                                    class="box"
+                                    style="
+                                        left:${values.q1}%;
+                            
+                                        width:${values.q3 - values.q1}%;
+                                    ">
+                                </div>
+                            
+                            
+                                <div
+                                    class="mean-line"
+                                    style="
+                                        left:${values.mean}%;
+                                    ">
+                                </div>
+                            
                             </div>
 
                         </div>
@@ -659,6 +673,7 @@ async function loadUnweighted() {
                         </div>
                 
                         <div class="comparison-track">
+
                 
                             <div
                                 class="whisker"
@@ -671,6 +686,7 @@ async function loadUnweighted() {
                                     }%;
                                 ">
                             </div>
+                            
                 
                             <div
                                 class="whisker-cap"
