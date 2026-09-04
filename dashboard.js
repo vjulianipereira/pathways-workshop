@@ -361,6 +361,21 @@ async function loadComparison() {
             .forEach(
                 ([pathway, values]) => {
 
+                    const range =
+                        Math.max(
+                            values.max - values.min,
+                            1
+                        );
+                    
+                    const boxLeft =
+                        ((values.q1 - values.min) / range) * 100;
+                    
+                    const boxWidth =
+                        ((values.q3 - values.q1) / range) * 100;
+                    
+                    const meanPos =
+                        ((values.mean - values.min) / range) * 100;
+
                     console.log(
                         pathway,
                         {
@@ -389,50 +404,38 @@ async function loadComparison() {
 
                         <div class="comparison-track">
                             
-                                <div
-                                    class="whisker"
-                                    style="
-                                        left:${values.min}%;
-                            
-                                        width:${values.max - values.min}%;
-                                    ">
+                               <div class="whisker"
+                                     style="
+                                         left:0%;
+                                         width:100%;
+                                     ">
                                 </div>
-                        
-                            
-                                <div
-                                    class="whisker-cap"
-                                    style="
-                                        left:${values.min}%;
-                                    ">
+                                
+                                <div class="whisker-cap"
+                                     style="
+                                         left:0%;
+                                     ">
                                 </div>
-                            
-                            
-                                <div
-                                    class="whisker-cap"
-                                    style="
-                                        left:${values.max}%;
-                                    ">
+                                
+                                <div class="whisker-cap"
+                                     style="
+                                         left:100%;
+                                     ">
                                 </div>
-                            
-                            
-                                <div
-                                    class="box"
-                                    style="
-                                        left:${values.q1}%;
-                            
-                                        width:${values.q3 - values.q1}%;
-                                    ">
+                                
+                                <div class="box"
+                                     style="
+                                         left:${boxLeft}%;
+                                
+                                         width:${boxWidth}%;
+                                     ">
                                 </div>
-                            
-                            
-                                <div
-                                    class="mean-line"
-                                    style="
-                                        left:${values.mean}%;
-                                    ">
+                                
+                                <div class="mean-line"
+                                     style="
+                                         left:${meanPos}%;
+                                     ">
                                 </div>
-                            
-                            </div>
 
                         </div>
 
@@ -476,6 +479,22 @@ async function loadUnweighted() {
             .forEach(
                 ([pathway, score]) => {
 
+                    const range =
+                        Math.max(
+                            score.max - score.min,
+                            1
+                        );
+                    
+                    const boxLeft =
+                        ((score.q1 - score.min) / range) * 100;
+                    
+                    const boxWidth =
+                        ((score.q3 - score.q1) / range) * 100;
+                    
+                    const meanPos =
+                        ((score.mean - score.min) / range) * 100;
+
+
                     console.log(
                     pathway,
                     {
@@ -505,50 +524,37 @@ async function loadUnweighted() {
                         <div class="comparison-track">
 
                 
-                            <div
-                                class="whisker"
-                                style="
-                                    left:${score.min}%;
-                
-                                    width:${
-                                        score.max -
-                                        score.min
-                                    }%;
-                                ">
+                           <div class="whisker"
+                                 style="
+                                     left:0%;
+                                     width:100%;
+                                 ">
                             </div>
                             
-                
-                            <div
-                                class="whisker-cap"
-                                style="
-                                    left:${score.min}%;
-                                ">
+                            <div class="whisker-cap"
+                                 style="
+                                     left:0%;
+                                 ">
                             </div>
-                
-                            <div
-                                class="whisker-cap"
-                                style="
-                                    left:${score.max}%;
-                                ">
+                            
+                            <div class="whisker-cap"
+                                 style="
+                                     left:100%;
+                                 ">
                             </div>
-                
-                            <div
-                                class="box"
-                                style="
-                                    left:${score.q1}%;
-                
-                                    width:${
-                                        score.q3 -
-                                        score.q1
-                                    }%;
-                                ">
+                            
+                            <div class="box"
+                                 style="
+                                     left:${boxLeft}%;
+                            
+                                     width:${boxWidth}%;
+                                 ">
                             </div>
-                
-                            <div
-                                class="mean-line"
-                                style="
-                                    left:${score.mean}%;
-                                ">
+                            
+                            <div class="mean-line"
+                                 style="
+                                     left:${meanPos}%;
+                                 ">
                             </div>
                 
                         </div>
