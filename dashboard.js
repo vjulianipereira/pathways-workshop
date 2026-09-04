@@ -636,6 +636,14 @@ async function loadComparison() {
 
     }
 
+    console.log(
+          pathway,
+          values.min,
+          values.q1,
+          values.mean,
+          values.q3,
+          values.max
+        );
 }
 
 async function loadUnweighted() {
