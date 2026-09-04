@@ -431,10 +431,12 @@ async function loadComparison() {
                                      ">
                                 </div>
                                 
-                                <div class="mean-line"
-                                     style="
-                                         left:${meanPos}%;
-                                     ">
+                                <div
+                                    class="mean-line"
+                                    style="
+                                        left:${values.q1 +
+                                                ((values.q3 - values.q1)/2)}%;
+                                    ">
                                 </div>
 
                         </div>
@@ -551,10 +553,12 @@ async function loadUnweighted() {
                                  ">
                             </div>
                             
-                            <div class="mean-line"
-                                 style="
-                                     left:${meanPos}%;
-                                 ">
+                            <div
+                                class="mean-line"
+                                style="
+                                    left:${score.q1 +
+                                            ((score.q3 - score.q1)/2)}%;
+                                ">
                             </div>
                 
                         </div>
