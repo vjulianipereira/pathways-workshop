@@ -670,11 +670,11 @@ async function loadUnweighted() {
                     console.log(
                     pathway,
                     {
-                        min: values.min,
-                        q1: values.q1,
-                        mean: values.mean,
-                        q3: values.q3,
-                        max: values.max
+                        min: score.min,
+                        q1: score.q1,
+                        mean: score.mean,
+                        q3: score.q3,
+                        max: score.max
                     }
                 );
 
