@@ -405,10 +405,11 @@ async function loadComparison() {
                         <div class="comparison-track">
                             
                                <div class="whisker"
-                                     style="
-                                         left:0%;
-                                         width:100%;
-                                     ">
+        
+                                style="
+                                    left:${values.min}%;
+                                    width:${values.max - values.min}%;
+                                    ">
                                 </div>
                                 
                                 <div class="whisker-cap"
@@ -526,12 +527,13 @@ async function loadUnweighted() {
                         <div class="comparison-track">
 
                 
-                           <div class="whisker"
-                                 style="
-                                     left:0%;
-                                     width:100%;
-                                 ">
-                            </div>
+                               <div class="whisker"
+        
+                                style="
+                                    left:${score.min}%;
+                                    width:${score.max - score.min}%;
+                                    ">
+                                </div>
                             
                             <div class="whisker-cap"
                                  style="
