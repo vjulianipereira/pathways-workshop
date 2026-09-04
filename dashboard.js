@@ -51,9 +51,7 @@ document
             loadUnweighted();
             loadResults();
             loadWeights();
-            loadUncertainty();
             loadConsensus();
-            loadRobustness();
             loadComparison();
             
 
@@ -65,122 +63,9 @@ loadCount();
 loadUnweighted();
 loadResults();
 loadWeights();
-loadUncertainty();
 loadConsensus();
-loadRobustness();
 loadComparison();
 
-async function loadUncertainty() {
-
-    try {
-
-        const response =
-            await fetch(
-                API_BASE +
-                "?action=uncertainty"
-            );
-
-        const data =
-            await response.json();
-
-        let html = "";
-
-        Object.entries(data)
-            .forEach(
-                ([pathway, values]) => {
-
-                html += `
-
-                    <div class="uncertainty-row">
-
-                        <div class="result-label">
-
-                            ${pathway}
-
-                        </div>
-
-                           <div class="uncertainty-track">
-
-                            <div
-                                class="whisker"
-                                style="
-                                    left:${values.min}%;
-                            
-                                    width:${
-                                        values.max -
-                                        values.min
-                                    }%;
-                                ">
-                            </div>
-                            
-                            <div
-                                class="whisker-cap"
-                                style="
-                                    left:${values.min}%;
-                                ">
-                            </div>
-                            
-                            <div
-                                class="whisker-cap"
-                                style="
-                                    left:${values.max}%;
-                                ">
-                            </div>
-                            
-                                <div
-                                    class="box"
-                                    style="
-                                        left:${values.q1}%;
-                            
-                                        width:${
-                                            values.q3 -
-                                            values.q1
-                                        }%;
-                                    ">
-                                </div>
-                            
-                                <div
-                                    class="mean-line"
-                                    style="
-                                        left:${values.mean}%;
-                                    ">
-                                </div>
-                            
-                            </div>
-
-                        <div class="result-value">
-
-                            ${values.mean.toFixed(1)}
-
-                            (${values.min.toFixed(1)}
-
-                            -
-
-                            ${values.max.toFixed(1)})
-
-                        </div>
-
-                    </div>
-
-                `;
-
-            });
-
-        document
-            .getElementById(
-                "uncertaintyChart"
-            )
-            .innerHTML = html;
-
-    }
-
-    catch (error) {
-
-        console.error(error);
-
-    }
-
-}
 
 setInterval(() => {
 
@@ -189,9 +74,7 @@ setInterval(() => {
     loadUnweighted();
     loadResults();
     loadWeights();
-    loadUncertainty();
     loadConsensus();
-    loadRobustness();
     loadComparison();
 
 }, 30000);
@@ -446,80 +329,6 @@ async function loadConsensus() {
         document
             .getElementById(
                 "consensusChart"
-            )
-            .innerHTML = html;
-
-    }
-
-    catch (error) {
-
-        console.error(error);
-
-    }
-
-}
-
-async function loadRobustness() {
-
-    try {
-
-        const response =
-            await fetch(
-                API_BASE +
-                "?action=robustness"
-            );
-
-        const data =
-            await response.json();
-        
-        console.log("ROBUSTNESS");
-        console.log(data);
-
-        let html = "";
-
-        Object.entries(data)
-            .forEach(
-                ([pathway, values]) => {
-
-                html += `
-
-                    <div class="profile-card">
-
-                        <h3>
-                            ${pathway}
-                        </h3>
-
-                        <p>
-                            Mean Score:
-                            ${values.mean.toFixed(1)}
-                        </p>
-
-                        <p>
-                            Consensus:
-                            ${values.consensus}
-                        </p>
-
-                        <p>
-                            Spread:
-                            ${values.spread.toFixed(1)}
-                        </p>
-
-                        <p>
-                            Robustness:
-                            <strong>
-                                ${values.robustness}
-                            </strong>
-                        </p>
-
-                    </div>
-
-                `;
-
-            });
-
-        document
-            .getElementById(
-                "robustnessChart"
             )
             .innerHTML = html;
 
