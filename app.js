@@ -56,7 +56,7 @@ function showWelcomeScreen() {
             </p>
 
             <p>
-                During this exercise you will:
+                During this exercise, you will:
             </p>
 
             <ul>
@@ -142,16 +142,16 @@ function renderPathway() {
 
                 <h3>${criterion}</h3>
 
-                <div id="slider${index}"></div>
-                
                 <div class="slider-wrapper">
                 
                     <div id="slider${index}"></div>
                 
                     <div class="scale-labels">
+                
                         <span>0</span>
                         <span>50</span>
                         <span>100</span>
+                
                     </div>
                 
                 </div>
