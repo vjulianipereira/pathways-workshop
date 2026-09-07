@@ -166,9 +166,6 @@ async function loadWeights() {
             .forEach(
                 ([criterion, score]) => {
 
-                const width =
-                    (score / 7) * 100;
-
                 html += `
 
                     <div class="comparison-row">
