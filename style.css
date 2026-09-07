@@ -344,20 +344,6 @@ h3 {
     background: #000;
 }
     
-.dashboard-scale {
-
-    display: flex;
-
-    justify-content: space-between;
-
-    margin-bottom: 20px;
-
-    color: #666;
-
-    font-size: 14px;
-
-}
-
 .simple-bar-row {
 
     margin-bottom: 15px;
@@ -859,6 +845,41 @@ h3 {
     border-right: 1px solid rgba(148, 163, 184, 0.32);
 }
 
+/* ===== FIGURE AXIS LABELS ===== */
+
+.axis-values {
+    position: relative;
+    display: block;
+
+    width: 100%;
+    height: 20px;
+    min-width: 0;
+
+    color: #64748b;
+    font-size: 0.75rem;
+    line-height: 1;
+}
+
+.axis-values span {
+    position: absolute;
+    top: 0;
+
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+/* Keep the first number inside the plot boundary */
+
+.axis-values span:first-child {
+    transform: none;
+}
+
+/* Keep the last number inside the plot boundary */
+
+.axis-values span:las*-child {
+    transform: translateX*-100%);
+}
+
 .figure-axis {
     display: grid;
     grid-template-columns:
@@ -872,33 +893,6 @@ h3 {
 
 .figure-axis-spacer {
     min-width: 0;
-}
-
-.axis-values {
-    display: grid;
-    align-items: start;
-    min-width: 0;
-
-    color: #64748b;
-    font-size: 0.75rem;
-    line-height: 1;
-}
-
-.axis-values-100 {
-    grid-template-columns: repeat(11, minmax(0, 1fr));
-}
-
-.axis-values span {
-    justify-self: center;
-    white-space: nowrap;
-}
-
-.axis-values span:first-child {
-    justify-self: start;
-}
-
-.axis-values span:last-child {
-    justify-self: end;
 }
 
 .dashboard-grid {
