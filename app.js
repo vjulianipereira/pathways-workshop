@@ -64,8 +64,12 @@ function showWelcomeScreen() {
 
             <div class="button-row">
 
-                <button id="startBtn">
+                <button
+                    id="startBtn"
+                    class="app-button app-button-primary"
+                    type="button">
                     Start Survey
+                    <span class="button-arrow" aria-hidden="true">→</span>
                 </button>
 
             </div>
@@ -166,13 +170,37 @@ function renderPathway() {
 
     });
 
-    html += `
-        <button id="nextBtn">
-            ${currentPathway < pathways.length - 1 ? "Next" : "Weight Criteria"}
-        </button>
-
-        </div>
-    `;
+        html += `
+        
+            <div class="survey-navigation">
+        
+                <div class="pathway-progress">
+                    Pathway ${currentPathway + 1} of ${pathways.length}
+                </div>
+        
+                <button
+                    id="nextBtn"
+                    class="app-button app-button-primary"
+                    type="button">
+        
+                    ${
+                        currentPathway < pathways.length - 1
+                            ? "Next Pathway"
+                            : "Finish Scoring"
+                    }
+        
+                    <span
+                        class="button-arrow"
+                        aria-hidden="true">
+                        →
+                    </span>
+        
+                </button>
+        
+            </div>
+        
+            </div>
+        `;
 
     survey.innerHTML = html;
 
