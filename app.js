@@ -9,6 +9,12 @@ const pathways = [
     "Alternative to Flexibility"
 ];
 
+let workshopId = "";
+
+let weightBudget = 0;
+
+let participantId = "";
+
 let criteria = [];
 
 let currentPathway = 0;
@@ -19,8 +25,6 @@ const weights = {};
 
 const results = {};
 
-const participantId =
-    "P" + Date.now();
 let taskCompleted = false;
 
 let pollingInterval = null;
@@ -104,6 +108,33 @@ async function loadCriteria() {
 
         criteria =
             data.criteria;
+
+        workshopId =
+            String(data.workshopId);
+        
+        weightBudget =
+            Number(data.weightBudget);
+        
+        participantId =
+            workshopId +
+            "-P" +
+            Date.now() +
+            "-" +
+            Math.floor(
+                Math.random() * 100000
+            );
+
+            if (
+                !workshopId ||
+                !criteria.length ||
+                weightBudget < 1
+            ) {
+            
+                throw new Error(
+                    "Workshop configuration is incomplete."
+                );
+            
+            }
 
         renderPathway();
 
@@ -419,7 +450,7 @@ function renderWeightingPage() {
             <h2>Criteria Importance</h2>
             
             <p>
-                Allocate exactly 5 importance points.
+                Allocate exactly ${weightBudget} importance points.
             </p>
     `;
 
@@ -469,7 +500,7 @@ function renderWeightingPage() {
                 <span id="totalAllocated">
                     ${getTotalWeight()}
                 </span>
-                / 5
+                    / ${weightBudget}
 
             </div>
 
@@ -477,7 +508,7 @@ function renderWeightingPage() {
 
                 <button
                     id="submitBtn"
-                    ${getTotalWeight() !== 5 ? "disabled" : ""}
+                    ${getTotalWeight() !== weightBudget ? "disabled" : ""}
                 >
                     Complete Task
                 </button>
@@ -511,7 +542,7 @@ function attachWeightEvents() {
                 const criterion =
                     button.dataset.criterion;
 
-                if (getTotalWeight() < 5) {
+                if (getTotalWeight() < weightBudget) {
 
                     weights[criterion]++;
 
@@ -548,10 +579,10 @@ function attachWeightEvents() {
     .getElementById("submitBtn")
     .addEventListener("click", () => {
 
-        if (getTotalWeight() !== 5) {
+        if (getTotalWeight() !== weightBudget) {
 
             alert(
-                "Please allocate exactly 5 weighting points before submitting."
+                "Please allocate exactly ${weightBudget} weighting points before submitting."
             );
 
             return;
@@ -696,15 +727,17 @@ async function submitSurvey() {
             mode: "no-cors",
         
             body: JSON.stringify({
-        
+            
+                workshopId,
+            
                 participantId,
-        
+            
                 responses,
-        
+            
                 weights,
-        
+            
                 results
-        
+            
             })
         
         });
