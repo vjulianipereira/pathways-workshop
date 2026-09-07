@@ -744,6 +744,50 @@ async function loadUnweighted() {
 
 }
 
+function renderWeightsAxis(maximum) {
+
+    const axis =
+        document.getElementById(
+            "weightsAxis"
+        );
+
+    const safeMaximum =
+        Math.max(
+            Number(maximum),
+            1
+        );
+
+    let html = "";
+
+    for (
+        let value = 0;
+        value <= safeMaximum;
+        value++
+    ) {
+
+        const position =
+            (
+                value /
+                safeMaximum
+            ) * 100;
+
+        html += `
+
+            <span
+                style="
+                    left:${position}%;
+                ">
+                ${value}
+            </span>
+
+        `;
+
+    }
+
+    axis.innerHTML = html;
+
+}
+
 
 document
     .getElementById(
