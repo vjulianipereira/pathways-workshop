@@ -120,11 +120,7 @@ h3 {
 
     justify-content: space-between;
 
-    width: calc(100% - 22px);
-
-    margin-left: 11px;
-
-    margin-top: 10px;
+    width: 100%;
 
     color: #444;
 
