@@ -349,7 +349,7 @@ async function loadComparison() {
         const response =
             await fetch(
                 API_BASE +
-                "?action=uncertainty"
+                "?action=umcmWeighted"
             );
 
         const data =
@@ -392,60 +392,51 @@ async function loadComparison() {
                         values
                     );
 
-                html += `
-
+                    html += `
+                    
                     <div class="comparison-row">
-
+                    
                         <div class="comparison-name">
-
+                    
                             ${pathway}
-
+                    
                         </div>
-
+                    
                         <div class="comparison-track">
-                            
-                               <div class="whisker"
-        
+                    
+                            <div
+                                class="whisker"
                                 style="
-                                    left:${values.min}%;
-                                    width:${values.max - values.min}%;
-                                    ">
-                                </div>
-                                
-                                <div class="whisker-cap"
-                                     style="
-                                         left:0%;
-                                     ">
-                                </div>
-                                
-                                <div class="whisker-cap"
-                                     style="
-                                         left:100%;
-                                     ">
-                                </div>
-                                
-                                <div class="box"
-                                     style="
-                                         left:${boxLeft}%;
-                                
-                                         width:${boxWidth}%;
-                                     ">
-                                </div>
-                                
-                                <div
-                                    class="mean-line"
-                                    style="
-                                        left:${values.q1 +
-                                                ((values.q3 - values.q1)/2)}%;
-                                    ">
-                                </div>
-
+                                    left:${values.extremaStart}%;
+                    
+                                    width:${values.extremaLength}%;
+                                ">
+                            </div>
+                    
+                            <div
+                                class="box"
+                                style="
+                                    left:${values.meansStart}%;
+                    
+                                    width:${values.meansLength}%;
+                                ">
+                            </div>
+                    
+                            <div
+                                class="mean-line"
+                                style="
+                                    left:${
+                                        values.meansStart +
+                                        values.meansLength
+                                    }%;
+                                ">
+                            </div>
+                    
                         </div>
-
+                    
                     </div>
-
-                `;
-
+                    
+                    `;
             });
 
         document
@@ -470,7 +461,7 @@ async function loadUnweighted() {
         const response =
             await fetch(
                 API_BASE +
-                "?action=unweighted"
+                "?action=mcmUnweighted"
             );
 
         const data =
@@ -480,92 +471,83 @@ async function loadUnweighted() {
 
         Object.entries(data)
             .forEach(
-                ([pathway, score]) => {
+                ([pathway, values]) => {
 
                     const range =
                         Math.max(
-                            score.max - score.min,
+                            values.max - values.min,
                             1
                         );
                     
                     const boxLeft =
-                        ((score.q1 - score.min) / range) * 100;
+                        ((values.q1 - values.min) / values) * 100;
                     
                     const boxWidth =
-                        ((score.q3 - score.q1) / range) * 100;
+                        ((values.q3 - values.q1) / values) * 100;
                     
                     const meanPos =
-                        ((score.mean - score.min) / range) * 100;
+                        ((values.mean - values.min) / values) * 100;
 
 
                     console.log(
                     pathway,
                     {
-                        min: score.min,
-                        q1: score.q1,
-                        mean: score.mean,
-                        q3: score.q3,
-                        max: score.max
+                        min: values.min,
+                        q1: values.q1,
+                        mean: values.mean,
+                        q3: values.q3,
+                        max: values.max
                     }
                 );
 
                 console.log(
                     pathway,
-                    score
+                    values
                 );
                 
                 html += `
                 
-                    <div class="comparison-row">
+                <div class="comparison-row">
                 
-                        <div class="comparison-name">
+                    <div class="comparison-name">
                 
-                            ${pathway}
+                        ${pathway}
                 
+                    </div>
+                
+                    <div class="comparison-track">
+                
+                        <div
+                            class="whisker"
+                            style="
+                                left:${values.extremaStart}%;
+                
+                                width:${values.extremaLength}%;
+                            ">
                         </div>
                 
-                        <div class="comparison-track">
-
+                        <div
+                            class="box"
+                            style="
+                                left:${values.meansStart}%;
                 
-                               <div class="whisker"
-        
-                                style="
-                                    left:${score.min}%;
-                                    width:${score.max - score.min}%;
-                                    ">
-                                </div>
-                            
-                            <div class="whisker-cap"
-                                 style="
-                                     left:0%;
-                                 ">
-                            </div>
-                            
-                            <div class="whisker-cap"
-                                 style="
-                                     left:100%;
-                                 ">
-                            </div>
-                            
-                            <div class="box"
-                                 style="
-                                     left:${boxLeft}%;
-                            
-                                     width:${boxWidth}%;
-                                 ">
-                            </div>
-                            
-                            <div
-                                class="mean-line"
-                                style="
-                                    left:${score.q1 +
-                                            ((score.q3 - score.q1)/2)}%;
-                                ">
-                            </div>
+                                width:${values.meansLength}%;
+                            ">
+                        </div>
                 
+                        <div
+                            class="mean-line"
+                            style="
+                                left:${
+                                    values.meansStart +
+                                    values.meansLength
+                                }%;
+                            ">
                         </div>
                 
                     </div>
+                
+                </div>
                 
                 `;
 
