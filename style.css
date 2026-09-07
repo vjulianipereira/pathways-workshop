@@ -63,135 +63,101 @@ h3 {
     border-bottom: none;
 }
 
-/* ===== SLIDER ===== */
+/* ===== SURVEY SLIDER ===== */
+
+.slider-wrapper {
+    width: 100%;
+    min-width: 0;
+    margin-top: 20px;
+}
 
 [id^="slider"] {
-
     width: 100%;
-
-    margin-top: 20px;
-
-    margin-bottom: 8px;
-
+    margin: 0;
 }
 
-.noUi-target {
-
-    border: none;
-
-    box-shadow: none;
-
-    background: #dddddd;
-
+.noUi-target.noUi-horizontal {
+    width: 100%;
     height: 12px;
-
+    border: 1px solid #cbd5e1;
     border-radius: 6px;
-
+    background: #f8fafc;
+    box-shadow: none;
 }
-``
+
+.noUi-horizontal .noUi-base,
+.noUi-horizontal .noUi-connects {
+    width: 100%;
+    height: 100%;
+}
 
 .noUi-connect {
-
-    background: #56b3ae;
-
+    background: #42b8b0;
 }
 
 .noUi-horizontal .noUi-handle {
-
     width: 22px !important;
+    min-width: 22px !important;
+    max-width: 22px !important;
 
     height: 22px !important;
+    min-height: 22px !important;
+    max-height: 22px !important;
 
+    right: -11px !important;
+    top: -6px !important;
+
+    border: 2px solid #2563eb !important;
     border-radius: 50% !important;
-
-    border: 3px solid #2563eb !important;
-
-    background: white !important;
-
+    background: #ffffff !important;
     box-shadow: none !important;
-
-    aspect-ratio: 1 / 1;
-
+    cursor: grab;
 }
 
-.noUi-handle {
-
-    min-width: 22px;
-
-    min-height: 22px;
-
-    max-width: 22px;
-
-    max-height: 22px;
-
+.noUi-horizontal .noUi-handle:active {
+    cursor: grabbing;
 }
 
 .noUi-horizontal .noUi-handle::before,
 .noUi-horizontal .noUi-handle::after {
-
     display: none;
-
 }
 
-.noUi-horizontal {
-
-    height: 14px;
-
-}
-
-.slider-wrapper {
-
-    width: 100%;
-
-}
-
-.slider-wrapper {
-
-    width: 100%;
-
-}
+/* Responsive scale using the slider's live container width */
 
 .scale-labels {
-
     position: relative;
-
     width: 100%;
-
-    height: 20px;
-
-    margin-top: 10px;
-
-    font-size: 14px;
-
+    height: 22px;
+    margin-top: 8px;
     color: #444;
+    font-size: 14px;
+    line-height: 1;
+}
 
+.scale-start,
+.scale-middle,
+.scale-end {
+    position: absolute;
+    top: 0;
 }
 
 .scale-start {
-
-    position: absolute;
-
     left: 0;
-
+    transform: none;
 }
 
 .scale-middle {
-
-    position: absolute;
-
     left: 50%;
-
     transform: translateX(-50%);
-
 }
 
 .scale-end {
-
-    position: absolute;
-
     right: 0;
-
+    transform: none;
 }
+
+/* Weighting */
 
 .weight-row {
     display: flex;
