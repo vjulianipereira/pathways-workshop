@@ -194,7 +194,7 @@ function renderPathway() {
 
             connect: true,
 
-            step: 5,
+            step: 1,
 
             range: {
                 min: 0,
