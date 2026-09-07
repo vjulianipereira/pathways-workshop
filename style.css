@@ -84,7 +84,6 @@ h3 {
 .noUi-handle {
     width: 22px !important;
     height: 22px !important;
-    right: -11px !important;
     top: -7px !important;
     border-radius: 50%;
     border: 2px solid #2563eb;
@@ -96,6 +95,15 @@ h3 {
 .noUi-handle::after {
     display: none;
 }
+
+.scale-labels {
+    display: flex;
+    justify-content: space-between;
+    width: calc(100% - 22px);
+    margin-left: 11px;
+    margin-top: 10px;
+}
+
 .weight-row {
     display: flex;
     justify-content: space-between;
