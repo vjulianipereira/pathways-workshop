@@ -56,15 +56,8 @@ function showWelcomeScreen() {
             </p>
 
             <p>
-                During this exercise, you will:
+                During this exercise, you will score the 5 pathways to energy demand flexibility against the criteria you helped develop.
             </p>
-
-            <ul>
-                <li>Score 5 flexibility pathways</li>
-                <li>Define uncertainty ranges</li>
-                <li>Weight the importance of evaluation criteria</li>
-            </ul>
-
             <p>
                 Estimated completion time: 5 minutes.
             </p>
