@@ -355,6 +355,11 @@ async function loadComparison() {
         const data =
             await response.json();
 
+        console.log(
+            "WEIGHTED DATA",
+            data
+        );
+
         let html = "";
 
         Object.entries(data)
