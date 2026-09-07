@@ -200,20 +200,6 @@ function renderPathway() {
 
         });
 
-        requestAnimationFrame(() => {
-
-                const sliderWidth =
-                    slider.querySelector(".noUi-base")
-                          .offsetWidth;
-            
-                slider
-                    .parentElement
-                    .nextElementSibling
-                    .style.width =
-                    sliderWidth + "px";
-            
-            });
-
         slider.noUiSlider.on("update", function (values) {
 
             document.getElementById(`minValue${index}`).textContent =
