@@ -107,25 +107,27 @@ h3 {
     display: none;
 }
 
-.scale-labels {
+.slider-wrapper {
+
+    width: 100%;
+
+}
+
+.slider-wrapper .scale-labels {
 
     display: flex;
 
     justify-content: space-between;
 
-    width: 100%;
+    width: calc(100% - 22px);
 
-    padding: 0 11px;
+    margin-left: 11px;
 
-    font-size: 14px;
+    margin-top: 10px;
 
     color: #444;
 
-}
-
-.slider-wrapper {
-
-    width: 100%;
+    font-size: 14px;
 
 }
 
