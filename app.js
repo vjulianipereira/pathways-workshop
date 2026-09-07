@@ -146,13 +146,13 @@ function renderPathway() {
                 
                     <div id="slider${index}"></div>
                 
-                    <div class="scale-labels">
+                </div>
                 
-                        <span>0</span>
-                        <span>50</span>
-                        <span>100</span>
+                <div class="scale-labels">
                 
-                    </div>
+                    <span>0</span>
+                    <span>50</span>
+                    <span>100</span>
                 
                 </div>
 
@@ -204,6 +204,20 @@ function renderPathway() {
             }
 
         });
+
+        requestAnimationFrame(() => {
+
+                const sliderWidth =
+                    slider.querySelector(".noUi-base")
+                          .offsetWidth;
+            
+                slider
+                    .parentElement
+                    .nextElementSibling
+                    .style.width =
+                    sliderWidth + "px";
+            
+            });
 
         slider.noUiSlider.on("update", function (values) {
 
