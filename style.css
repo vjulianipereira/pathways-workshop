@@ -67,7 +67,7 @@ h3 {
 
 [id^="slider"] {
     margin-top: 20px;
-    margin-bottom: 12px;
+    margin-bottom: 0px;
 }
 
 .noUi-target {
@@ -82,13 +82,23 @@ h3 {
 }
 
 .noUi-handle {
+
     width: 22px !important;
+
     height: 22px !important;
+
     top: -7px !important;
+
     border-radius: 50%;
+
     border: 2px solid #2563eb;
+
+    background: white;
+
     box-shadow: none;
+
     cursor: pointer;
+
 }
 
 .noUi-handle::before,
@@ -97,12 +107,23 @@ h3 {
 }
 
 .scale-labels {
-    display: flex;
-    justify-content: space-between;
+
     width: calc(100% - 22px);
+
     margin-left: 11px;
-    margin-top: 10px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-top: 12px;
+
+    font-size: 14px;
+
+    color: #444;
+
 }
+
 
 .weight-row {
     display: flex;
