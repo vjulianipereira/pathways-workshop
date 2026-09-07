@@ -413,20 +413,6 @@ async function loadComparison() {
                                 width:${values.extremaLength}%;
                             ">
                         </div>
-                        
-                        <div
-                            class="whisker-cap"
-                            style="
-                                left:${values.extremaStart}%;
-                            ">
-                        </div>
-                        
-                        <div
-                            class="whisker-cap"
-                            style="
-                                left:${values.extremaStart + values.extremaLength}%;
-                            ">
-                        </div>
                     
                             <div
                                 class="box"
@@ -537,20 +523,6 @@ async function loadUnweighted() {
                             style="
                                 left:${values.extremaStart}%;
                                 width:${values.extremaLength}%;
-                            ">
-                        </div>
-                        
-                        <div
-                            class="whisker-cap"
-                            style="
-                                left:${values.extremaStart}%;
-                            ">
-                        </div>
-                        
-                        <div
-                            class="whisker-cap"
-                            style="
-                                left:${values.extremaStart + values.extremaLength}%;
                             ">
                         </div>
                 
