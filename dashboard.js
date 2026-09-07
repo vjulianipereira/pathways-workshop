@@ -167,7 +167,7 @@ async function loadWeights() {
                 ([criterion, score]) => {
 
                 const width =
-                    (score / 5) * 100;
+                    (score / 7) * 100;
 
                 html += `
 
@@ -185,7 +185,7 @@ async function loadWeights() {
                             <div
                                 class="mean-line"
                                 style="
-                                    left:${(score / 5) * 100}%;
+                                    left:${(score / 7) * 100}%;
                                 ">
                             </div>
                     
