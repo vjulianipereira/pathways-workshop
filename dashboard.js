@@ -432,7 +432,7 @@ async function loadComparison() {
                                 style="
                                     left:${
                                         values.meansStart +
-                                        values.meansLength
+                                        (values.meansLength / 2)
                                     }%;
                                 ">
                             </div>
@@ -545,7 +545,7 @@ async function loadUnweighted() {
                             style="
                                 left:${
                                     values.meansStart +
-                                    values.meansLength
+                                    (values.meansLength / 2)
                                 }%;
                             ">
                         </div>
