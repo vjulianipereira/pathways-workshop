@@ -143,14 +143,16 @@ function renderPathway() {
                 <h3>${criterion}</h3>
 
                 <div id="slider${index}"></div>
-
-                <div class="scale-labels">
                 
-                    <span>0</span>
+                <div class="slider-wrapper">
                 
-                    <span>50</span>
+                    <div id="slider${index}"></div>
                 
-                    <span>100</span>
+                    <div class="scale-labels">
+                        <span>0</span>
+                        <span>50</span>
+                        <span>100</span>
+                    </div>
                 
                 </div>
 
