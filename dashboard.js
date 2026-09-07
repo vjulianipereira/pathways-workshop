@@ -600,21 +600,6 @@ async function loadUnweighted() {
 
 }
 
-let presentationMode =
-    false;
-
-function togglePresentationMode() {
-
-    presentationMode =
-        !presentationMode;
-
-    document.body
-        .classList
-        .toggle(
-            "presentation-mode"
-        );
-
-}
 
 document
     .getElementById(
@@ -647,13 +632,4 @@ document
         () => updateStage(
             "COMPLETE"
         )
-    );
-
-document
-    .getElementById(
-        "presentationBtn"
-    )
-    .addEventListener(
-        "click",
-        togglePresentationMode
     );
