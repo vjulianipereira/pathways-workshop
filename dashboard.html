@@ -36,6 +36,50 @@
         
         </div>
 
+        <section class="dashboard-setup-panel">
+
+            <h2>
+                Workshop Criteria
+            </h2>
+        
+            <p>
+                Enter one criterion per line.
+                The number of criteria determines
+                the number of weighting points
+                available to participants.
+            </p>
+        
+            <textarea
+                id="criteriaInput"
+                rows="8"
+                placeholder="Enter one criterion per line"></textarea>
+        
+            <div class="criteria-editor-summary">
+        
+                <span id="criteriaCount">
+                    0 criteria
+                </span>
+        
+                <span id="weightBudgetDisplay">
+                    0 weighting points
+                </span>
+        
+            </div>
+        
+            <div class="button-row">
+        
+                <button
+                    id="saveCriteriaBtn"
+                    type="button">
+                    Save Criteria
+                </button>
+        
+            </div>
+        
+            <p id="criteriaSaveStatus"></p>
+        
+        </section>
+
         <h2 id="counter">
             Loading...
         </h2>
