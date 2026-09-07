@@ -880,45 +880,6 @@ h3 {
 
 }
 
-.presentation-mode
-#uncertaintySection {
-
-    display: none;
-
-}
-
-.presentation-mode
-#consensusSection {
-
-    display: none;
-
-}
-
-.presentation-mode
-#profilesSection {
-
-    display: none;
-
-}
-
-.presentation-mode {
-
-    background: white;
-
-}
-
-.presentation-mode .card {
-
-    max-width: 100%;
-
-    width: 100%;
-
-    box-shadow: none;
-
-    border-radius: 0;
-
-}
-
 .dashboard-grid {
 
     display: grid;
