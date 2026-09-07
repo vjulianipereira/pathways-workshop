@@ -86,11 +86,13 @@ h3 {
     background: #2563eb;
 }
 
-.noUi-handle {
+.noUi-horizontal .noUi-handle {
 
     width: 22px !important;
 
     height: 22px !important;
+
+    top: -7px !important;
 
     border-radius: 50%;
 
@@ -98,9 +100,8 @@ h3 {
 
     box-shadow: none;
 
-    cursor: pointer;
-
 }
+
 
 .noUi-handle::before,
 .noUi-handle::after {
