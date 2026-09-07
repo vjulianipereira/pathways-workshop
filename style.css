@@ -762,103 +762,73 @@ h3 {
 }
 
 .whisker {
-
     position: absolute;
-
-    top: 18px;
-
+    top: 19px;
     height: 2px;
-
-    background: black;
-
-    z-index: 1;
-
+    background: #111827;
+    z-index: 3;
 }
 
-.whisker-cap {
-
+.whisker::before,
+.whisker::after {
+    content: "";
     position: absolute;
-
-    top: 10px;
-
+    top: 50%;
     width: 2px;
+    height: 16px;
+    background: #111827;
+    transform: translateY(-50%);
+}
 
-    height: 18px;
+.whisker::before {
+    left: 0;
+}
 
-    background: black;
-
-    z-index: 2;
-
+.whisker::after {
+    right: 0;
 }
 
 .box {
-
     position: absolute;
-
     top: 8px;
+    height: 22px;
 
-    height: 20px;
+    background: rgba(249, 115, 22, 0.5);
+    border: 2px solid #d97706;
 
-    background:
-        rgba(
-            255,
-            165,
-            0,
-            0.5
-        );
-
-    border:
-        2px solid
-        #d97706;
-    
-    z-index: 3;
-
+    z-index: 4;
 }
 
 .mean-line {
-
     position: absolute;
-
-    top: 4px;
-
+    top: 5px;
     width: 3px;
-
     height: 28px;
-
-    background: black;
-
-    z-index: 4;
-
+    background: #111827;
+    transform: translateX(-50%);
+    z-index: 5;
 }
 
 .comparison-row {
-
     display: flex;
-
     align-items: center;
-
-    gap: 15px;
-
-    margin-bottom: 40px;
-
+    gap: var(--figure-column-gap);
+    min-height: 40px;
+    margin-bottom: 28px;
+    position: relative;
+    z-index: 2;
 }
 
 .comparison-name {
+    width: var(--figure-label-width);
+    flex: 0 0 var(--figure-label-width);
 
-    width: 180px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.25;
 
-    flex-shrink: 0;
-
-    font-size: 1rem;
-
-    line-height: 1.2;
-
-    overflow: hidden;
-
-    text-overflow: ellipsis;
-
-    white-space: nowrap;
-
+    white-space: normal;
+    overflow-wrap: anywhere;
 }
 
 .comparison-track {
@@ -868,6 +838,83 @@ h3 {
     height: 40px;
     background: transparent;
     z-index: 2;
+}
+
+.figure-shell {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+}
+
+.figure-content {
+    position: relative;
+    z-index: 2;
+}
+
+.figure-grid {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: var(--figure-plot-offset);
+
+    z-index: 1;
+    pointer-events: none;
+}
+
+.figure-grid-100 {
+    background-image:
+        repeating-linear-gradient(
+            to right,
+            rgba(148, 163, 184, 0.32) 0,
+            rgba(148, 163, 184, 0.32) 1px,
+            transparent 1px,
+            transparent 10%
+        );
+
+    border-right: 1px solid rgba(148, 163, 184, 0.32);
+}
+
+.figure-axis {
+    display: grid;
+    grid-template-columns:
+        var(--figure-label-width)
+        minmax(0, 1fr);
+
+    column-gap: var(--figure-column-gap);
+    width: 100%;
+    margin-top: 6px;
+}
+
+.figure-axis-spacer {
+    min-width: 0;
+}
+
+.axis-values {
+    display: grid;
+    align-items: start;
+    min-width: 0;
+
+    color: #64748b;
+    font-size: 0.75rem;
+    line-height: 1;
+}
+
+.axis-values-100 {
+    grid-template-columns: repeat(11, minmax(0, 1fr));
+}
+
+.axis-values span {
+    justify-self: center;
+    white-space: nowrap;
+}
+
+.axis-values span:first-child {
+    justify-self: start;
+}
+
+.axis-values span:last-child {
+    justify-self: end;
 }
 
 .dashboard-grid {
@@ -1003,4 +1050,16 @@ h3 {
     #startBtn {
         min-width: 0;
     }
+}
+
+/* ===== SHARED FIGURE GEOMETRY ===== */
+
+:root {
+    --figure-label-width: 180px;
+    --figure-column-gap: 15px;
+    --figure-plot-offset:
+        calc(
+            var(--figure-label-width) +
+            var(--figure-column-gap)
+        );
 }
