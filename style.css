@@ -634,17 +634,20 @@ h3 {
 
     top: 8px;
 
-    height: 22px;
+    height: 20px;
 
-    background: rgba(
-        255,
-        165,
-        0,
-        0.5
-    );
+    background:
+        rgba(
+            255,
+            165,
+            0,
+            0.5
+        );
 
-    border: 2px solid #cc7a00;
-
+    border:
+        2px solid
+        #d97706;
+    
     z-index: 3;
 
 }
@@ -657,7 +660,7 @@ h3 {
 
     width: 3px;
 
-    height: 30px;
+    height: 28px;
 
     background: black;
 
