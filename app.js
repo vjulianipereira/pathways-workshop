@@ -111,6 +111,42 @@ async function loadCriteria() {
 
         workshopId =
             String(data.workshopId);
+
+        const submissionKey =
+            `surveySubmitted_${workshopId}`;
+        
+        if (
+            localStorage.getItem(
+                submissionKey
+            )
+        ) {
+        
+            survey.innerHTML = `
+        
+                <div class="card">
+        
+                    <h2>
+                        Task Already Completed
+                    </h2>
+        
+                    <p>
+                        This device has already
+                        submitted a response
+                        for this workshop.
+                    </p>
+        
+                    <p>
+                        Please return your attention
+                        to the workshop facilitator.
+                    </p>
+        
+                </div>
+        
+            `;
+        
+            return;
+        
+        }
         
         weightBudget =
             Number(data.weightBudget);
@@ -750,10 +786,10 @@ async function submitSurvey() {
         
         }
         
-         localStorage.setItem(
-             "surveySubmitted",
-             "true"
-         );
+        localStorage.setItem(
+            `surveySubmitted_${workshopId}`,
+            "true"
+        );
         survey.innerHTML = `
             <div class="card">
         
