@@ -152,12 +152,12 @@ function renderPathway() {
                 </div>
 
                 <p>
-                    Min:
+                    Pessimistic Scenario:
                     <span id="minValue${index}">20</span>
 
                     &nbsp;&nbsp;&nbsp;
 
-                    Max:
+                    Optimistic Scenario:
                     <span id="maxValue${index}">80</span>
                 </p>
 
