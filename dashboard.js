@@ -38,6 +38,31 @@ async function loadWorkshopConfig() {
 
         }
 
+        const safeMaximum =
+    Math.max(
+        config.weightBudget,
+        1
+    );
+
+    document
+        .getElementById(
+            "weightsGrid"
+        )
+        .style
+        .backgroundImage = `
+    
+            repeating-linear-gradient(
+                to right,
+                rgba(148, 163, 184, 0.32) 0,
+                rgba(148, 163, 184, 0.32) 1px,
+                transparent 1px,
+                transparent ${
+                    100 / safeMaximum
+                }%
+            )
+    
+        `;
+
         renderWeightsAxis(
             config.weightBudget
         );
@@ -326,6 +351,12 @@ async function loadWeights() {
 
     try {
 
+        if (!activeWorkshopConfig) {
+        
+            await loadWorkshopConfig();
+        
+        }
+
         const response =
             await fetch(
                 API_BASE +
@@ -357,7 +388,16 @@ async function loadWeights() {
                             <div
                                 class="mean-line"
                                 style="
-                                    left:${(score / 7) * 100}%;
+                                    left:${
+                                        (
+                                            score /
+                                            Math.max(
+                                                activeWorkshopConfig
+                                                    .weightBudget,
+                                                1
+                                            )
+                                        ) * 100
+                                    }%;
                                 ">
                             </div>
                     
