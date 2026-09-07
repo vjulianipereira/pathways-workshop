@@ -114,7 +114,15 @@ h3 {
 
 }
 
-.slider-wrapper .scale-labels {
+.slider-wrapper {
+
+    width: 100%;
+
+    margin-bottom: 10px;
+
+}
+
+.scale-labels {
 
     display: flex;
 
