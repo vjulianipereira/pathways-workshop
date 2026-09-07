@@ -149,21 +149,47 @@ h3 {
 
     width: 100%;
 
-    margin-bottom: 10px;
-
 }
 
 .scale-labels {
 
-    display: flex;
+    position: relative;
 
-    justify-content: space-between;
+    width: 100%;
 
-    width: calc(100% - 220px);
+    height: 20px;
+
+    margin-top: 10px;
+
+    font-size: 14px;
 
     color: #444;
 
-    font-size: 14px;
+}
+
+.scale-start {
+
+    position: absolute;
+
+    left: 0;
+
+}
+
+.scale-middle {
+
+    position: absolute;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+}
+
+.scale-end {
+
+    position: absolute;
+
+    right: 0;
 
 }
 
