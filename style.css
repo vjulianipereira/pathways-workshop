@@ -66,8 +66,13 @@ h3 {
 /* ===== SLIDER ===== */
 
 [id^="slider"] {
+
+    width: 100%;
+
     margin-top: 20px;
-    margin-bottom: 0px;
+
+    margin-bottom: 8px;
+
 }
 
 .noUi-target {
@@ -87,13 +92,9 @@ h3 {
 
     height: 22px !important;
 
-    top: -7px !important;
-
     border-radius: 50%;
 
     border: 2px solid #2563eb;
-
-    background: white;
 
     box-shadow: none;
 
@@ -108,15 +109,13 @@ h3 {
 
 .scale-labels {
 
-    width: calc(100% - 22px);
-
-    margin-left: 11px;
-
     display: flex;
 
     justify-content: space-between;
 
-    margin-top: 12px;
+    width: 100%;
+
+    padding: 0 11px;
 
     font-size: 14px;
 
@@ -124,6 +123,11 @@ h3 {
 
 }
 
+.slider-wrapper {
+
+    width: 100%;
+
+}
 
 .weight-row {
     display: flex;
