@@ -1,6 +1,179 @@
 const API_BASE =
     "https://script.google.com/macros/s/AKfycbxyuIV5Z_4iSWnj_JM2dKLq6FW5U4glq5mSRXa3CQLy6JFjQDuXYUoxmFXyL06_x1WI/exec";
 
+let activeWorkshopConfig = null;
+
+async function loadWorkshopConfig() {
+
+    try {
+
+        const response =
+            await fetch(API_BASE);
+
+        const config =
+            await response.json();
+
+        activeWorkshopConfig =
+            config;
+
+        const input =
+            document.getElementById(
+                "criteriaInput"
+            );
+
+        input.value =
+            config.criteria.join("\n");
+
+        updateCriteriaEditorCount();
+
+        const activeId =
+            document.getElementById(
+                "activeWorkshopId"
+            );
+
+        if (activeId) {
+
+            activeId.textContent =
+                config.workshopId;
+
+        }
+
+        renderWeightsAxis(
+            config.weightBudget
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Configuration error:",
+            error
+        );
+
+    }
+
+}
+
+function getCriteriaFromEditor() {
+
+    const input =
+        document.getElementById(
+            "criteriaInput"
+        );
+
+    return input.value
+        .split("\n")
+        .map(value =>
+            value.trim()
+        )
+        .filter(Boolean);
+
+}
+
+function updateCriteriaEditorCount() {
+
+    const criteria =
+        getCriteriaFromEditor();
+
+    document
+        .getElementById(
+            "criteriaCount"
+        )
+        .textContent =
+        `${criteria.length} criteria`;
+
+    document
+        .getElementById(
+            "weightBudgetDisplay"
+        )
+        .textContent =
+        `${criteria.length} weighting points`;
+
+}
+
+async function saveCriteria() {
+
+    const criteria =
+        getCriteriaFromEditor();
+
+    if (criteria.length < 1) {
+
+        alert(
+            "Enter at least one criterion."
+        );
+
+        return;
+
+    }
+
+    const duplicateCount =
+        criteria.length -
+        new Set(criteria).size;
+
+    if (duplicateCount > 0) {
+
+        alert(
+            "Remove duplicate criterion names."
+        );
+
+        return;
+
+    }
+
+    const status =
+        document.getElementById(
+            "criteriaSaveStatus"
+        );
+
+    status.textContent =
+        "Saving criteria...";
+
+    try {
+
+        await fetch(API_BASE, {
+
+            method: "POST",
+
+            mode: "no-cors",
+
+            body: JSON.stringify({
+
+                action: "saveCriteria",
+
+                criteria: criteria
+
+            })
+
+        });
+
+        status.textContent =
+            "Criteria saved.";
+
+        setTimeout(
+            () => {
+
+                loadWorkshopConfig();
+
+                loadWeights();
+
+            },
+            1200
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        status.textContent =
+            "Criteria could not be saved.";
+
+    }
+
+}
+
 async function loadCount() {
 
     try {
@@ -46,6 +219,7 @@ document
         "click",
         () => {
 
+            loadWorkshopConfig();
             loadStage();
             loadCount();
             loadUnweighted();
@@ -58,6 +232,7 @@ document
         }
     );
 
+loadWorkshopConfig();
 loadStage();
 loadCount();
 loadUnweighted();
@@ -601,4 +776,22 @@ document
         () => updateStage(
             "COMPLETE"
         )
+    );
+
+document
+    .getElementById(
+        "criteriaInput"
+    )
+    .addEventListener(
+        "input",
+        updateCriteriaEditorCount
+    );
+
+document
+    .getElementById(
+        "saveCriteriaBtn"
+    )
+    .addEventListener(
+        "click",
+        saveCriteria
     );
