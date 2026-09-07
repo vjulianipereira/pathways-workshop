@@ -145,9 +145,13 @@ function renderPathway() {
                 <div id="slider${index}"></div>
 
                 <div class="scale-labels">
+                
                     <span>0</span>
+                
                     <span>50</span>
+                
                     <span>100</span>
+                
                 </div>
 
                 <p>
