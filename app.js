@@ -143,9 +143,11 @@ function renderPathway() {
                 
                 <div class="scale-labels">
                 
-                    <span>0</span>
-                    <span>50</span>
-                    <span>100</span>
+                    <span class="scale-start">0</span>
+                
+                    <span class="scale-middle">50</span>
+                
+                    <span class="scale-end">100</span>
                 
                 </div>
 
