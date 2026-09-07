@@ -349,7 +349,7 @@ async function loadComparison() {
         const response =
             await fetch(
                 API_BASE +
-                "?action=umcmWeighted"
+                "?action=mcmWeighted"
             );
 
         const data =
