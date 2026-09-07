@@ -951,6 +951,155 @@ function saveActiveWorkshop() {
 
 }
 
+async function saveWorkshop() {
+
+    const confirmed =
+        window.confirm(
+            "Save and close the current workshop?"
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const status =
+        document.getElementById(
+            "workshopActionStatus"
+        );
+
+    status.textContent =
+        "Saving workshop...";
+
+    try {
+
+        await fetch(API_BASE, {
+
+            method: "POST",
+
+            mode: "no-cors",
+
+            body: JSON.stringify({
+
+                action:
+                    "saveWorkshop"
+
+            })
+
+        });
+
+        status.textContent =
+            "Workshop saved.";
+
+        setTimeout(
+            () => {
+
+                loadStage();
+
+                loadWorkshopConfig();
+
+            },
+            1200
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        status.textContent =
+            "Workshop could not be saved.";
+
+    }
+
+}
+
+async function resetWorkshopFromDashboard() {
+
+    const workshopName =
+        window.prompt(
+            "Enter a name for the new workshop:"
+        );
+
+    if (!workshopName) {
+        return;
+    }
+
+    const confirmed =
+        window.confirm(
+            "Create a new workshop? " +
+            "The current workshop data " +
+            "will remain archived."
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const status =
+        document.getElementById(
+            "workshopActionStatus"
+        );
+
+    status.textContent =
+        "Creating new workshop...";
+
+    try {
+
+        await fetch(API_BASE, {
+
+            method: "POST",
+
+            mode: "no-cors",
+
+            body: JSON.stringify({
+
+                action:
+                    "resetWorkshop",
+
+                workshopName:
+                    workshopName
+
+            })
+
+        });
+
+        status.textContent =
+            "New workshop created.";
+
+        setTimeout(
+            () => {
+
+                loadWorkshopConfig();
+
+                loadStage();
+
+                loadCount();
+
+                loadUnweighted();
+
+                loadWeights();
+
+                loadComparison();
+
+                loadConsensus();
+
+            },
+            1500
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        status.textContent =
+            "New workshop could not be created.";
+
+    }
+
+}
 
 document
     .getElementById(
@@ -1001,4 +1150,22 @@ document
     .addEventListener(
         "click",
         saveCriteria
+    );
+
+document
+    .getElementById(
+        "saveWorkshopBtn"
+    )
+    .addEventListener(
+        "click",
+        saveWorkshop
+    );
+
+document
+    .getElementById(
+        "resetWorkshopBtn"
+    )
+    .addEventListener(
+        "click",
+        resetWorkshopFromDashboard
     );
