@@ -386,7 +386,7 @@ async function loadWeights() {
                         <div class="comparison-track">
                     
                             <div
-                                class="mean-line"
+                                class="criterion-marker"
                                 style="
                                     left:${
                                         (
