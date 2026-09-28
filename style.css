@@ -732,54 +732,6 @@ h3 {
 
 }
 
-.whisker {
-    position: absolute;
-    top: 19px;
-    height: 2px;
-    background: #111827;
-    z-index: 3;
-}
-
-.whisker::before,
-.whisker::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    width: 2px;
-    height: 16px;
-    background: #111827;
-    transform: translateY(-50%);
-}
-
-.whisker::before {
-    left: 0;
-}
-
-.whisker::after {
-    right: 0;
-}
-
-.box {
-    position: absolute;
-    top: 8px;
-    height: 22px;
-
-    background: rgba(249, 115, 22, 0.5);
-    border: 2px solid #d97706;
-
-    z-index: 4;
-}
-
-.mean-line {
-    position: absolute;
-    top: 5px;
-    width: 3px;
-    height: 28px;
-    background: #111827;
-    transform: translateX(-50%);
-    z-index: 5;
-}
-
 .comparison-row {
     display: flex;
     align-items: center;
@@ -804,10 +756,100 @@ h3 {
 
 .comparison-track {
     position: relative;
+
     flex: 1;
     min-width: 0;
     height: 40px;
+
+    background: transparent;
+
+    overflow: visible;
+
     z-index: 2;
+}
+
+/* ===== MCM INTERVAL FIGURES ===== */
+
+.mcm-whisker-line {
+    positi*n: absolute;
+
+    top: 19px;
+    h*ight: 2px;
+
+    background: #11182*;
+
+    z-index: 3;
+}
+
+.mcm-whisker*cap {
+    position: absolute;
+
+   *top: 11px;
+
+    width: 2px;
+    he*ght: 18px;
+
+    background: #11182*;
+
+    transform: translateX(-50%)*
+
+    z-index: 4;
+}
+
+.mcm-means-bo* {
+    position: absolute;
+
+    to*: 8px;
+
+    min-width: 2px;
+    he*ght: 24px;
+
+    background:
+      * rgba(
+            249,
+          * 115,
+            22,
+            *.5
+        );
+
+    border:
+       *2px solid
+        #d97706;
+
+    bo*-sizing: border-box;
+
+    z-index:*5;
+}
+
+.mcm-centre-line {
+    posit*on: absolute;
+
+    top: 5px;
+
+    *idth: 3px;
+    height: 30px;
+
+    *ackground: #111827;
+
+    transform* translateX(-50%);
+
+    z-index: 6*
+}
+
+.figure-empty-message,
+.figure*error-message {
+    margin:
+      * 24px
+        0
+        24px
+     *  var(--figure-plot-offset);
+
+    *olor: #64748b;
+    font-size: 0.9r*m;
+}
+
+.figure-error-message {
+    *olor: #b91c1c;
 }
 
 .figure-shell {
