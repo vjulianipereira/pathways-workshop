@@ -554,231 +554,303 @@ async function loadConsensus() {
 
 }
 
+function renderMcmPathwayRow(
+    pathway,
+    values
+) {
+
+    const extremaStart =
+        Number(
+            values.extremaStart
+        );
+
+    const extremaLength =
+        Number(
+            values.extremaLength
+        );
+
+    const meansStart =
+        Number(
+            values.meansStart
+        );
+
+    const meansLength =
+        Number(
+            values.meansLength
+        );
+
+    const extremaEnd =
+        extremaStart +
+        extremaLength;
+
+    const meansCentre =
+        meansStart +
+        (
+            meansLength / 2
+        );
+
+    const validValues = [
+
+        extremaStart,
+
+        extremaLength,
+
+        extremaEnd,
+
+        meansStart,
+
+        meansLength,
+
+        meansCentre
+
+    ].every(
+        value =>
+            Number.isFinite(
+                value
+            )
+    );
+
+    if (!validValues) {
+
+        console.error(
+            "Invalid MCM chart data:",
+            pathway,
+            values
+        );
+
+        return "";
+    }
+
+    return `
+
+        <div class="comparison-row">
+
+            <div
+                class="comparison-name"
+                title="${pathway}">
+                ${pathway}
+            </div>
+
+            <div class="comparison-track">
+
+                <div
+                    class="mcm-whisker-line"
+                    style="
+                        left:${extremaStart}%;
+                        width:${extremaLength}%;
+                    ">
+                </div>
+
+                <div
+                    class="mcm-whisker-cap"
+                    style="
+                        left:${extremaStart}%;
+                    ">
+                </div>
+
+                <div
+                    class="mcm-whisker-cap"
+                    style="
+                        left:${extremaEnd}%;
+                    ">
+                </div>
+
+                <div
+                    class="mcm-means-box"
+                    style="
+                        left:${meansStart}%;
+                        width:${meansLength}%;
+                    ">
+                </div>
+
+                <div
+                    class="mcm-centre-line"
+                    style="
+                        left:${meansCentre}%;
+                    ">
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
 async function loadComparison() {
+
+    const chart =
+        document.getElementById(
+            "comparisonChart"
+        );
 
     try {
 
         const response =
             await fetch(
                 API_BASE +
-                "?action=mcmWeighted"
+                "?action=mcmWeighted" +
+                "&cacheBust=" +
+                Date.now()
             );
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Weighted endpoint returned " +
+                response.status
+            );
+
+        }
 
         const data =
             await response.json();
 
         console.log(
-            "WEIGHTED DATA",
+            "WEIGHTED MCM DATA:",
             data
         );
 
-        let html = "";
+        const entries =
+            Object.entries(
+                data
+            );
 
-        Object.entries(data)
-            .forEach(
-                ([pathway, values]) => {
+        if (!entries.length) {
 
-                    const range =
-                        Math.max(
-                            values.max - values.min,
-                            1
-                        );
-                    
-                    const boxLeft =
-                        ((values.q1 - values.min) / range) * 100;
-                    
-                    const boxWidth =
-                        ((values.q3 - values.q1) / range) * 100;
-                    
-                    const meanPos =
-                        ((values.mean - values.min) / range) * 100;
+            chart.innerHTML = `
 
-                    console.log(
-                        pathway,
-                        {
-                            min: values.min,
-                            q1: values.q1,
-                            mean: values.mean,
-                            q3: values.q3,
-                            max: values.max
-                        }
-                    );
+                <p class="figure-empty-message">
+                    No completed weighting
+                    responses are available yet.
+                </p>
 
-                    console.log(
-                        pathway,
-                        values
-                    );
+            `;
 
-                    html += `
-                    
-                    <div class="comparison-row">
-                    
-                        <div class="comparison-name">
-                    
-                            ${pathway}
-                    
-                        </div>
-                    
-                        <div class="comparison-track">
-                    
-                        <div
-                            class="whisker"
-                            style="
-                                left:${values.extremaStart}%;
-                                width:${values.extremaLength}%;
-                            ">
-                        </div>
-                    
-                            <div
-                                class="box"
-                                style="
-                                    left:${values.meansStart}%;
-                    
-                                    width:${values.meansLength}%;
-                                ">
-                            </div>
-                    
-                            <div
-                                class="mean-line"
-                                style="
-                                    left:${
-                                        values.meansStart +
-                                        (values.meansLength / 2)
-                                    }%;
-                                ">
-                            </div>
-                    
-                        </div>
-                    
-                    </div>
-                    
-                    `;
-            });
+            return;
 
-        document
-            .getElementById(
-                "comparisonChart"
-            )
-            .innerHTML = html;
+        }
+
+        chart.innerHTML =
+            entries
+                .map(
+                    ([pathway, values]) =>
+
+                        renderMcmPathwayRow(
+                            pathway,
+                            values
+                        )
+
+                )
+                .join("");
 
     }
 
     catch (error) {
 
-        console.error(error);
+        console.error(
+            "Weighted chart error:",
+            error
+        );
+
+        chart.innerHTML = `
+
+            <p class="figure-error-message">
+                The weighted figure
+                could not be loaded.
+            </p>
+
+        `;
 
     }
+
 }
 
 async function loadUnweighted() {
+
+    const chart =
+        document.getElementById(
+            "unweightedChart"
+        );
 
     try {
 
         const response =
             await fetch(
                 API_BASE +
-                "?action=mcmUnweighted"
+                "?action=mcmUnweighted" +
+                "&cacheBust=" +
+                Date.now()
             );
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unweighted endpoint returned " +
+                response.status
+            );
+
+        }
 
         const data =
             await response.json();
 
-        let html = "";
+        console.log(
+            "UNWEIGHTED MCM DATA:",
+            data
+        );
 
-        Object.entries(data)
-            .forEach(
-                ([pathway, values]) => {
+        const entries =
+            Object.entries(
+                data
+            );
 
-                    const range =
-                        Math.max(
-                            values.max - values.min,
-                            1
-                        );
-                    
-                    const boxLeft =
-                        ((values.q1 - values.min) / values) * 100;
-                    
-                    const boxWidth =
-                        ((values.q3 - values.q1) / values) * 100;
-                    
-                    const meanPos =
-                        ((values.mean - values.min) / values) * 100;
+        if (!entries.length) {
 
+            chart.innerHTML = `
 
-                    console.log(
-                    pathway,
-                    {
-                        min: values.min,
-                        q1: values.q1,
-                        mean: values.mean,
-                        q3: values.q3,
-                        max: values.max
-                    }
-                );
+                <p class="figure-empty-message">
+                    No scoring responses
+                    have been submitted yet.
+                </p>
 
-                console.log(
-                    pathway,
-                    values
-                );
-                
-                html += `
-                
-                <div class="comparison-row">
-                
-                    <div class="comparison-name">
-                
-                        ${pathway}
-                
-                    </div>
-                
-                    <div class="comparison-track">
-                
-                        <div
-                            class="whisker"
-                            style="
-                                left:${values.extremaStart}%;
-                                width:${values.extremaLength}%;
-                            ">
-                        </div>
-                
-                        <div
-                            class="box"
-                            style="
-                                left:${values.meansStart}%;
-                
-                                width:${values.meansLength}%;
-                            ">
-                        </div>
-                
-                        <div
-                            class="mean-line"
-                            style="
-                                left:${
-                                    values.meansStart +
-                                    (values.meansLength / 2)
-                                }%;
-                            ">
-                        </div>
-                
-                    </div>
-                
-                </div>
-                
-                `;
+            `;
 
-            });
+            return;
 
-        document
-            .getElementById(
-                "unweightedChart"
-            )
-            .innerHTML = html;
+        }
+
+        chart.innerHTML =
+            entries
+                .map(
+                    ([pathway, values]) =>
+
+                        renderMcmPathwayRow(
+                            pathway,
+                            values
+                        )
+
+                )
+                .join("");
 
     }
 
     catch (error) {
 
-        console.error(error);
+        console.error(
+            "Unweighted chart error:",
+            error
+        );
+
+        chart.innerHTML = `
+
+            <p class="figure-error-message">
+                The unweighted figure
+                could not be loaded.
+            </p>
+
+        `;
 
     }
 
