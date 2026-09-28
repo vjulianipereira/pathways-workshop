@@ -23,11 +23,18 @@ const responses = {};
 
 const weights = {};
 
-const results = {};
-
 let taskCompleted = false;
 
 let pollingInterval = null;
+
+let scoringSubmissionInProgress =
+    false;
+
+let scoringSubmitted =
+    false;
+
+let weightingSubmissionInProgress =
+    false;
 
 window.onload = function () {
 
@@ -313,40 +320,346 @@ function renderPathway() {
 
 }
 
-function saveAndNext() {
+async function waitForSubmissionStatus(
+    phase
+) {
 
-    const pathwayName = pathways[currentPathway];
+    const maximumAttempts =
+        20;
 
-    responses[pathwayName] = {};
+    for (
+        let attempt = 1;
+        attempt <= maximumAttempts;
+        attempt++
+    ) {
 
-    criteria.forEach((criterion, index) => {
+        await new Promise(
+            resolve => {
 
-        const slider =
-            document.getElementById(`slider${index}`);
+                setTimeout(
+                    resolve,
+                    1000
+                );
 
-        const values =
-            slider.noUiSlider.get();
+            }
+        );
 
-        responses[pathwayName][criterion] = {
-            min: Number(values[0]),
-            max: Number(values[1])
-        };
+        const statusUrl =
+            API_URL +
+            "?action=submissionStatus" +
+            "&workshopId=" +
+            encodeURIComponent(
+                workshopId
+            ) +
+            "&participantId=" +
+            encodeURIComponent(
+                participantId
+            ) +
+            "&cacheBust=" +
+            Date.now();
+
+        const response =
+            await fetch(
+                statusUrl
+            );
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Could not check submission status."
+            );
+
+        }
+
+        const status =
+            await response.json();
+
+        console.log(
+            "Submission status:",
+            phase,
+            status
+        );
+
+        if (
+            phase === "SCORING" &&
+            status.scoringPathwayCount >=
+                pathways.length
+        ) {
+
+            return status;
+
+        }
+
+        if (
+            phase === "WEIGHTING" &&
+            status.weightedPathwayCount >=
+                pathways.length &&
+            status.weightCount >=
+                criteria.length
+        ) {
+
+            return status;
+
+        }
+
+    }
+
+    throw new Error(
+        phase +
+        " submission was not confirmed " +
+        "within 20 seconds."
+    );
+
+}
+
+function buildUnweightedResults() {
+
+    const unweightedResults =
+        {};
+
+    pathways.forEach(pathway => {
+
+        unweightedResults[pathway] =
+            calculateUnweightedAverage(
+                pathway
+            );
 
     });
 
-    console.log(responses);
+    return unweightedResults;
+
+}
+
+async function submitScoringPhase() {
+
+    if (
+        scoringSubmissionInProgress ||
+        scoringSubmitted
+    ) {
+
+        return;
+
+    }
+
+    scoringSubmissionInProgress =
+        true;
+
+    const survey =
+        document.getElementById(
+            "survey"
+        );
+
+    survey.innerHTML = `
+
+        <div class="card">
+
+            <h2>
+                Saving Scores...
+            </h2>
+
+            <p>
+                Please wait while your
+                pathway scores are recorded.
+            </p>
+
+        </div>
+
+    `;
+
+    try {
+
+        const unweightedResults =
+            buildUnweightedResults();
+
+        const payload = {
+
+            action:
+                "submitScoring",
+
+            workshopId:
+                workshopId,
+
+            participantId:
+                participantId,
+
+            responses:
+                responses,
+
+            unweightedResults:
+                unweightedResults
+
+        };
+
+        console.log(
+            "Submitting scoring payload:",
+            payload
+        );
+
+        await fetch(API_URL, {
+
+            method: "POST",
+
+            mode: "no-cors",
+
+            body:
+                JSON.stringify(
+                    payload
+                )
+
+        });
+
+        console.log(
+            "Scoring POST request sent."
+        );
+
+        const status =
+            await waitForSubmissionStatus(
+                "SCORING"
+            );
+
+        console.log(
+            "Scoring submission confirmed:",
+            status
+        );
+
+        scoringSubmitted =
+            true;
+
+        renderWaitingRoom();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Scoring submission error:",
+            error
+        );
+
+        survey.innerHTML = `
+
+            <div class="card">
+
+                <h2>
+                    Scores Could Not Be Saved
+                </h2>
+
+                <p>
+                    ${error.message}
+                </p>
+
+                <p>
+                    Check your connection
+                    and try again.
+                </p>
+
+                <div class="button-row">
+
+                    <button
+                        id="retryScoringBtn"
+                        class="app-button app-button-primary"
+                        type="button">
+                        Try Again
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+        document
+            .getElementById(
+                "retryScoringBtn"
+            )
+            .addEventListener(
+                "click",
+                submitScoringPhase
+            );
+
+    }
+
+    finally {
+
+        scoringSubmissionInProgress =
+            false;
+
+    }
+
+}
+
+async function saveAndNext() {
+
+    const nextButton =
+        document.getElementById(
+            "nextBtn"
+        );
+
+    if (nextButton) {
+
+        nextButton.disabled =
+            true;
+
+    }
+
+    const pathwayName =
+        pathways[
+            currentPathway
+        ];
+
+    responses[pathwayName] =
+        {};
+
+    criteria.forEach(
+        (criterion, index) => {
+
+            const slider =
+                document.getElementById(
+                    `slider${index}`
+                );
+
+            const values =
+                slider
+                    .noUiSlider
+                    .get();
+
+            responses[pathwayName][criterion] = {
+
+                min:
+                    Number(
+                        values[0]
+                    ),
+
+                max:
+                    Number(
+                        values[1]
+                    )
+
+            };
+
+        }
+    );
+
+    console.log(
+        "Stored pathway responses:",
+        pathwayName,
+        responses[pathwayName]
+    );
 
     currentPathway++;
 
-    if (currentPathway < pathways.length) {
-    
+    if (
+        currentPathway <
+        pathways.length
+    ) {
+
         renderPathway();
-    
-    } else {
-    
-        renderWaitingRoom();
-    
+
+        return;
+
     }
+
+    await submitScoringPhase();
 
 }
 
@@ -618,7 +931,7 @@ function attachWeightEvents() {
         if (getTotalWeight() !== weightBudget) {
 
             alert(
-                "Please allocate exactly ${weightBudget} weighting points before submitting."
+                `Please allocate exactly ${weightBudget} weighting points before submitting.`
             );
 
             return;
@@ -688,144 +1001,246 @@ function calculateWeightedAverage(pathway) {
 
 }
 
+function buildWeightedResults() {
+
+    const weightedResults =
+        {};
+
+    pathways.forEach(pathway => {
+
+        const unweighted =
+            calculateUnweightedAverage(
+                pathway
+            );
+
+        const weighted =
+            calculateWeightedAverage(
+                pathway
+            );
+
+        weightedResults[pathway] = {
+
+            weighted:
+                weighted,
+
+            difference:
+                weighted -
+                unweighted
+
+        };
+
+    });
+
+    return weightedResults;
+
+}
+
 async function submitSurvey() {
 
+    if (
+        weightingSubmissionInProgress ||
+        taskCompleted
+    ) {
+
+        return;
+
+    }
+
+    weightingSubmissionInProgress =
+        true;
+
     const survey =
-        document.getElementById("survey");
+        document.getElementById(
+            "survey"
+        );
+
+    taskCompleted =
+        true;
+
+    if (pollingInterval) {
+
+        clearInterval(
+            pollingInterval
+        );
+
+        pollingInterval =
+            null;
+
+    }
 
     survey.innerHTML = `
+
         <div class="card">
-            <h2>Submitting...</h2>
+
+            <h2>
+                Submitting...
+            </h2>
+
+            <p>
+                Please wait while your
+                criterion weights are recorded.
+            </p>
+
         </div>
+
     `;
 
     try {
 
-        pathways.forEach(pathway => {
+        if (!scoringSubmitted) {
 
-            const unweighted =
-                calculateUnweightedAverage(
-                    pathway
-                );
-        
-            const weighted =
-                calculateWeightedAverage(
-                    pathway
-                );
-        
-            results[pathway] = {
-        
-                unweighted:
-                    unweighted,
-        
-                weighted:
-                    weighted,
-        
-                difference:
-                    weighted - unweighted
-        
-            };
-        
-        });
-
-        console.log("RESULTS BEING SENT");
-        console.log(results);
-
-        console.log(
-            "RESULTS POPULATED"
-        );
-        
-        console.log(
-            JSON.stringify(
-                results,
-                null,
-                2
-            )
-        );
-
-
-        taskCompleted = true;
-        
-        if (pollingInterval) {
-        
-            clearInterval(
-                pollingInterval
+            await waitForSubmissionStatus(
+                "SCORING"
             );
-        
-            pollingInterval = null;
-        
+
+            scoringSubmitted =
+                true;
+
         }
-        
-        await fetch(API_URL, {
-        
-            method: "POST",
-        
-            mode: "no-cors",
-        
-            body: JSON.stringify({
-            
+
+        const weightedResults =
+            buildWeightedResults();
+
+        const payload = {
+
+            action:
+                "submitWeighting",
+
+            workshopId:
                 workshopId,
-            
+
+            participantId:
                 participantId,
-            
-                responses,
-            
+
+            weights:
                 weights,
-            
-                results
-            
-            })
-        
+
+            weightedResults:
+                weightedResults
+
+        };
+
+        console.log(
+            "Submitting weighting payload:",
+            payload
+        );
+
+        await fetch(API_URL, {
+
+            method: "POST",
+
+            mode: "no-cors",
+
+            body:
+                JSON.stringify(
+                    payload
+                )
+
         });
 
-                if (pollingInterval) {
-        
-            clearInterval(
-                pollingInterval
+        console.log(
+            "Weighting POST request sent."
+        );
+
+        const status =
+            await waitForSubmissionStatus(
+                "WEIGHTING"
             );
-        
-        }
-        
+
+        console.log(
+            "Weighting submission confirmed:",
+            status
+        );
+
         localStorage.setItem(
             `surveySubmitted_${workshopId}`,
             "true"
         );
+
         survey.innerHTML = `
+
             <div class="card">
-        
+
                 <h2>
                     Task Complete
                 </h2>
-        
+
                 <p>
                     Thank you for participating.
                 </p>
-        
+
+                <p>
+                    Your responses have been recorded.
+                </p>
+
                 <p>
                     Please return your attention
                     to the workshop facilitator.
                 </p>
-        
+
             </div>
+
         `;
 
     }
 
     catch (error) {
 
-        console.error(error);
+        console.error(
+            "Weighting submission error:",
+            error
+        );
+
+        taskCompleted =
+            false;
 
         survey.innerHTML = `
+
             <div class="card">
 
-                <h2>Submission Failed</h2>
+                <h2>
+                    Submission Failed
+                </h2>
 
                 <p>
-                    Please notify the facilitator.
+                    ${error.message}
                 </p>
 
+                <p>
+                    Check your connection
+                    and try again.
+                </p>
+
+                <div class="button-row">
+
+                    <button
+                        id="retryWeightingBtn"
+                        class="app-button app-button-primary"
+                        type="button">
+                        Try Again
+                    </button>
+
+                </div>
+
             </div>
+
         `;
+
+        document
+            .getElementById(
+                "retryWeightingBtn"
+            )
+            .addEventListener(
+                "click",
+                submitSurvey
+            );
+
+    }
+
+    finally {
+
+        weightingSubmissionInProgress =
+            false;
 
     }
 
