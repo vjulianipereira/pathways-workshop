@@ -1039,8 +1039,14 @@ h3 {
 }
 
 .criterion-marker {
+    position: absolute;
+    top: 5px;
     width: 4px;
+    height: 30px;
     background: #2563eb;
+    border-radius: 2px;
+    transform: translateX(-50%);
+    z-index: 6;
 }
 
 .dashboard-setup-panel {
