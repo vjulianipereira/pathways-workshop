@@ -756,100 +756,12 @@ h3 {
 
 .comparison-track {
     position: relative;
-
     flex: 1;
     min-width: 0;
     height: 40px;
-
     background: transparent;
-
     overflow: visible;
-
     z-index: 2;
-}
-
-/* ===== MCM INTERVAL FIGURES ===== */
-
-.mcm-whisker-line {
-    positi*n: absolute;
-
-    top: 19px;
-    h*ight: 2px;
-
-    background: #11182*;
-
-    z-index: 3;
-}
-
-.mcm-whisker*cap {
-    position: absolute;
-
-   *top: 11px;
-
-    width: 2px;
-    he*ght: 18px;
-
-    background: #11182*;
-
-    transform: translateX(-50%)*
-
-    z-index: 4;
-}
-
-.mcm-means-bo* {
-    position: absolute;
-
-    to*: 8px;
-
-    min-width: 2px;
-    he*ght: 24px;
-
-    background:
-      * rgba(
-            249,
-          * 115,
-            22,
-            *.5
-        );
-
-    border:
-       *2px solid
-        #d97706;
-
-    bo*-sizing: border-box;
-
-    z-index:*5;
-}
-
-.mcm-centre-line {
-    posit*on: absolute;
-
-    top: 5px;
-
-    *idth: 3px;
-    height: 30px;
-
-    *ackground: #111827;
-
-    transform* translateX(-50%);
-
-    z-index: 6*
-}
-
-.figure-empty-message,
-.figure*error-message {
-    margin:
-      * 24px
-        0
-        24px
-     *  var(--figure-plot-offset);
-
-    *olor: #64748b;
-    font-size: 0.9r*m;
-}
-
-.figure-error-message {
-    *olor: #b91c1c;
 }
 
 .figure-shell {
@@ -869,7 +781,6 @@ h3 {
     right: 0;
     bottom: 0;
     left: var(--figure-plot-offset);
-
     z-index: 1;
     pointer-events: none;
 }
@@ -885,6 +796,63 @@ h3 {
         );
 
     border-right: 1px solid rgba(148, 163, 184, 0.32);
+}
+
+/* ===== MCM INTERVAL FIGURES ===== */
+
+.mcm-whisker-line {
+    position: absolute;
+    top: 19px;
+    height: 2px;
+    background: #111827;
+    z-index: 3;
+}
+
+.mcm-whisker-cap {
+    position: absolute;
+    top: 11px;
+    width: 2px;
+    height: 18px;
+    background: #111827;
+    transform: translateX(-50%);
+    z-index: 4;
+}
+
+.mcm-means-box {
+    position: absolute;
+    top: 8px;
+    min-width: 2px;
+    height: 24px;
+    background: rgba(249, 115, 22, 0.5);
+    border: 2px solid #d97706;
+    box-sizing: border-box;
+    z-index: 5;
+}
+
+.mcm-centre-line {
+    position: absolute;
+    top: 5px;
+    width: 3px;
+    height: 30px;
+    background: #111827;
+    transform: translateX(-50%);
+    z-index: 6;
+}
+
+.figure-empty-message,
+.figure-error-message {
+    margin:
+        24px
+        0
+        24px
+        var(--figure-plot-offset);
+
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.figure-error-message {
+    color: #b91c1c;
 }
 
 /* ===== FIGURE AXIS LABELS ===== */
@@ -918,8 +886,8 @@ h3 {
 
 /* Keep the last number inside the plot boundary */
 
-.axis-values span:las*-child {
-    transform: translateX*-100%);
+.axis-values span:last-child {
+    transform: translateX(-100%);
 }
 
 .figure-axis {
