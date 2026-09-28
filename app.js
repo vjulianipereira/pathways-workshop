@@ -5,8 +5,8 @@ const pathways = [
     "Optimise Flexibility",
     "Monetise Flexibility",
     "Collectivise Flexibility",
-    "Democratic Flexibility",
-    "Alternative to Flexibility"
+    "Democratise Flexibility",
+    "Sufficiency not Flexibility"
 ];
 
 let workshopId = "";
