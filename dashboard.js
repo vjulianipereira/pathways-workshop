@@ -218,7 +218,7 @@ async function loadCount() {
         document
             .getElementById("counter")
             .textContent =
-            `Participants Completed: ${data.responses}`;
+            `Participants Finished Scoring: ${data.responses}`;
 
         document
             .getElementById("updated")
