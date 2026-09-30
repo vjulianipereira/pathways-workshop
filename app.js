@@ -469,7 +469,7 @@ async function recoverParticipantByInitials() {
         );
 
     if (
-        initials.length < 2
+        initials.length <= 2
     ) {
 
         statusElement.textContent =
@@ -935,7 +935,7 @@ async function checkInitialsAndStartScoring() {
         );
 
     if (
-        initials.length < 2
+        initials.length <= 2
     ) {
 
         statusElement.textContent =
