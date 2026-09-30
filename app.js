@@ -1,6 +1,19 @@
 const API_URL =
     "https://script.google.com/macros/s/AKfycbxyuIV5Z_4iSWnj_JM2dKLq6FW5U4glq5mSRXa3CQLy6JFjQDuXYUoxmFXyL06_x1WI/exec";
 
+const urlParameters =
+    new URLSearchParams(
+        window.location.search
+    );
+
+const accessPhase =
+    String(
+        urlParameters.get("phase") ||
+        "scoring"
+    )
+    .trim()
+    .toLowerCase();
+
 const pathways = [
     "Optimise Flexibility",
     "Monetise Flexibility",
@@ -25,8 +38,6 @@ const weights = {};
 
 let taskCompleted = false;
 
-let pollingInterval = null;
-
 let scoringSubmissionInProgress =
     false;
 
@@ -38,19 +49,378 @@ let weightingSubmissionInProgress =
 
 window.onload = function () {
 
-    showWelcomeScreen();
-
-        if (
-        localStorage.getItem(
-            "taskCompleted"
-        )
+    if (
+        accessPhase ===
+        "weighting"
     ) {
-    
-        taskCompleted = true;
-    
+
+        initialiseWeightingAccess();
+
+        return;
+
     }
 
+    initialiseScoringAccess();
+
 };
+
+function initialiseScoringAccess() {
+
+    showWelcomeScreen();
+
+}
+
+async function initialiseWeightingAccess() {
+
+    const survey =
+        document.getElementById(
+            "survey"
+        );
+
+    survey.innerHTML = `
+
+        <div class="card">
+
+            <p>
+                Loading criteria weighting...
+            </p>
+
+        </div>
+
+    `;
+
+    try {
+
+        const config =
+            await loadWorkshopConfiguration();
+
+        const completedSubmissionKey =
+            `surveySubmitted_${workshopId}`;
+
+        if (
+            localStorage.getItem(
+                completedSubmissionKey
+            )
+        ) {
+
+            renderTaskAlreadyCompleted();
+
+            return;
+
+        }
+
+        const scoringStatus =
+            await getParticipantSubmissionStatus();
+
+        if (
+            scoringStatus.scoringPathwayCount <
+            pathways.length
+        ) {
+
+            renderScoringRequired();
+
+            return;
+
+        }
+
+        scoringSubmitted =
+            true;
+
+        if (
+            String(
+                config.stage
+            ).trim() !==
+            "WEIGHTING"
+        ) {
+
+            renderWeightingNotOpen();
+
+            return;
+
+        }
+
+        renderWeightingPage();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Weighting access error:",
+            error
+        );
+
+        survey.innerHTML = `
+
+            <div class="card">
+
+                <h2>
+                    Weighting Could Not Be Loaded
+                </h2>
+
+                <p>
+                    ${error.message}
+                </p>
+
+                <div class="button-row">
+
+                    <button
+                        id="retryWeightingAccessBtn"
+                        class="app-button app-button-primary"
+                        type="button">
+
+                        Try Again
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+        document
+            .getElementById(
+                "retryWeightingAccessBtn"
+            )
+            .addEventListener(
+                "click",
+                initialiseWeightingAccess
+            );
+
+    }
+
+}
+
+async function getParticipantSubmissionStatus() {
+
+    const statusUrl =
+        API_URL +
+        "?action=submissionStatus" +
+        "&workshopId=" +
+        encodeURIComponent(
+            workshopId
+        ) +
+        "&participantId=" +
+        encodeURIComponent(
+            participantId
+        ) +
+        "&cacheBust=" +
+        Date.now();
+
+    const response =
+        await fetch(
+            statusUrl
+        );
+
+    if (!response.ok) {
+
+        throw new Error(
+            "Participant submission status could not be checked."
+        );
+
+    }
+
+    return response.json();
+
+}
+
+function renderScoringRequired() {
+
+    const survey =
+        document.getElementById(
+            "survey"
+        );
+
+    survey.innerHTML = `
+
+        <div class="card">
+
+            <h2>
+                Scoring Required
+            </h2>
+
+            <p>
+                No completed pathway scoring
+                was found for this device.
+            </p>
+
+            <p>
+                Please scan the
+                <strong>Pathway Scoring QR code</strong>
+                and complete scoring first.
+            </p>
+
+            <div class="participant-recovery-form">
+
+            <label for="participantCodeInput">
+        
+                If you completed scoring in another
+                browser, enter your participant code:
+        
+            </label>
+        
+            <input
+                id="participantCodeInput"
+                type="text"
+                autocomplete="off"
+                placeholder="Participant code">
+        
+            <button
+                id="recoverParticipantBtn"
+                class="app-button app-button-primary"
+                type="button">
+        
+                Continue
+        
+            </button>
+        
+            <p id="participantRecoveryStatus"></p>
+
+        </div>
+
+    `;
+
+    document
+    .getElementById(
+        "recoverParticipantBtn"
+    )
+    .addEventListener(
+        "click",
+        async () => {
+
+            const input =
+                document.getElementById(
+                    "participantCodeInput"
+                );
+
+            const code =
+                input.value.trim();
+
+            if (!code) {
+
+                return;
+
+            }
+
+            participantId =
+                code;
+
+            const status =
+                await getParticipantSubmissionStatus();
+
+            if (
+                status.scoringPathwayCount <
+                pathways.length
+            ) {
+
+                document
+                    .getElementById(
+                        "participantRecoveryStatus"
+                    )
+                    .textContent =
+                    "No completed scoring was found for that code.";
+
+                return;
+
+            }
+
+            localStorage.setItem(
+                `participantId_${workshopId}`,
+                participantId
+            );
+
+            initialiseWeightingAccess();
+
+        }
+    );
+
+}
+
+function renderWeightingNotOpen() {
+
+    const survey =
+        document.getElementById(
+            "survey"
+        );
+
+    survey.innerHTML = `
+
+        <div class="card">
+
+            <h2>
+                Criteria Weighting Not Open
+            </h2>
+
+            <p>
+                Your pathway scores
+                have been recorded.
+            </p>
+
+            <p>
+                Please wait until the facilitator
+                opens the criteria-weighting stage.
+            </p>
+
+            <div class="button-row">
+
+                <button
+                    id="checkWeightingStageBtn"
+                    class="app-button app-button-primary"
+                    type="button">
+
+                    Check Again
+
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+    document
+        .getElementById(
+            "checkWeightingStageBtn"
+        )
+        .addEventListener(
+            "click",
+            initialiseWeightingAccess
+        );
+
+}
+
+function renderTaskAlreadyCompleted() {
+
+    const survey =
+        document.getElementById(
+            "survey"
+        );
+
+    survey.innerHTML = `
+
+        <div class="card">
+
+            <h2>
+                Task Already Completed
+            </h2>
+
+            <p>
+                This device has already
+                submitted a response
+                for this workshop.
+            </p>
+
+            <p>
+                Please return your attention
+                to the workshop facilitator.
+            </p>
+
+        </div>
+
+    `;
+
+}
 
 function showWelcomeScreen() {
 
@@ -94,70 +464,73 @@ function showWelcomeScreen() {
 
 }
 
-async function loadCriteria() {
+async function loadWorkshopConfiguration() {
 
-    const survey =
-        document.getElementById("survey");
+    const response =
+        await fetch(
+            API_URL +
+            "?cacheBust=" +
+            Date.now()
+        );
 
-    survey.innerHTML =
-        "<p>Loading workshop criteria...</p>";
+    if (!response.ok) {
 
-    try {
+        throw new Error(
+            "Workshop configuration could not be loaded."
+        );
 
-        const response =
-            await fetch(API_URL);
+    }
 
-        const text =
-            await response.text();
+    const data =
+        await response.json();
 
-        const data =
-            JSON.parse(text);
+    criteria =
+        Array.isArray(
+            data.criteria
+        )
+            ? data.criteria
+            : [];
 
-        criteria =
-            data.criteria;
+    workshopId =
+        String(
+            data.workshopId || ""
+        ).trim();
 
-        workshopId =
-            String(data.workshopId);
+    weightBudget =
+        Number(
+            data.weightBudget
+        );
 
-        const submissionKey =
-            `surveySubmitted_${workshopId}`;
-        
-        if (
-            localStorage.getItem(
-                submissionKey
-            )
-        ) {
-        
-            survey.innerHTML = `
-        
-                <div class="card">
-        
-                    <h2>
-                        Task Already Completed
-                    </h2>
-        
-                    <p>
-                        This device has already
-                        submitted a response
-                        for this workshop.
-                    </p>
-        
-                    <p>
-                        Please return your attention
-                        to the workshop facilitator.
-                    </p>
-        
-                </div>
-        
-            `;
-        
-            return;
-        
-        }
-        
-        weightBudget =
-            Number(data.weightBudget);
-        
+    if (
+        !workshopId ||
+        !criteria.length ||
+        !Number.isFinite(
+            weightBudget
+        ) ||
+        weightBudget < 1
+    ) {
+
+        throw new Error(
+            "Workshop configuration is incomplete."
+        );
+
+    }
+
+    const participantIdKey =
+        `participantId_${workshopId}`;
+
+    const storedParticipantId =
+        localStorage.getItem(
+            participantIdKey
+        );
+
+    if (storedParticipantId) {
+
+        participantId =
+            storedParticipantId;
+
+    } else {
+
         participantId =
             workshopId +
             "-P" +
@@ -167,17 +540,69 @@ async function loadCriteria() {
                 Math.random() * 100000
             );
 
-            if (
-                !workshopId ||
-                !criteria.length ||
-                weightBudget < 1
-            ) {
-            
-                throw new Error(
-                    "Workshop configuration is incomplete."
-                );
-            
-            }
+        localStorage.setItem(
+            participantIdKey,
+            participantId
+        );
+
+    }
+
+    return data;
+
+}
+
+async function loadCriteria() {
+
+    const survey =
+        document.getElementById(
+            "survey"
+        );
+
+    survey.innerHTML = `
+
+        <div class="card">
+
+            <p>
+                Loading workshop criteria...
+            </p>
+
+        </div>
+
+    `;
+
+    try {
+
+        await loadWorkshopConfiguration();
+
+        const scoringSubmissionKey =
+            `scoringSubmitted_${workshopId}`;
+
+        const completedSubmissionKey =
+            `surveySubmitted_${workshopId}`;
+
+        if (
+            localStorage.getItem(
+                completedSubmissionKey
+            )
+        ) {
+
+            renderTaskAlreadyCompleted();
+
+            return;
+
+        }
+
+        if (
+            localStorage.getItem(
+                scoringSubmissionKey
+            )
+        ) {
+
+            renderScoringComplete();
+
+            return;
+
+        }
 
         renderPathway();
 
@@ -185,13 +610,48 @@ async function loadCriteria() {
 
     catch (error) {
 
+        console.error(
+            "Scoring configuration error:",
+            error
+        );
+
         survey.innerHTML = `
-            <p style="color:red">
-                Failed to load criteria.
-            </p>
+
+            <div class="card">
+
+                <h2>
+                    Workshop Could Not Be Loaded
+                </h2>
+
+                <p>
+                    ${error.message}
+                </p>
+
+                <div class="button-row">
+
+                    <button
+                        id="retryConfigBtn"
+                        class="app-button app-button-primary"
+                        type="button">
+
+                        Try Again
+
+                    </button>
+
+                </div>
+
+            </div>
+
         `;
 
-        console.error(error);
+        document
+            .getElementById(
+                "retryConfigBtn"
+            )
+            .addEventListener(
+                "click",
+                loadCriteria
+            );
 
     }
 
@@ -524,8 +984,13 @@ async function submitScoringPhase() {
 
         scoringSubmitted =
             true;
-
-        renderWaitingRoom();
+        
+        localStorage.setItem(
+            `scoringSubmitted_${workshopId}`,
+            "true"
+        );
+        
+        renderScoringComplete();
 
     }
 
@@ -663,88 +1128,7 @@ async function saveAndNext() {
 
 }
 
-function startStagePolling() {
-
-    checkStage();
-
-    if (pollingInterval) {
-
-        clearInterval(
-            pollingInterval
-        );
-
-    }
-
-    pollingInterval =
-        setInterval(
-            checkStage,
-            15000
-        );
-
-}
-
-async function checkStage() {
-    if (taskCompleted) {
-    
-        return;
-    
-    }
-    try {
-
-        const response =
-            await fetch(
-                API_URL +
-                "?action=stage"
-            );
-
-        const data =
-            await response.json();
-
-        const status =
-            document.getElementById(
-                "stageStatus"
-            );
-
-        if (status) {
-
-            status.textContent =
-                "Current stage: " +
-                data.stage;
-
-        }
-
-        if (
-            data.stage ===
-            "WEIGHTING"
-            &&
-            !taskCompleted
-        ) {
-        
-            if (pollingInterval) {
-        
-                clearInterval(
-                    pollingInterval
-                );
-        
-                pollingInterval = null;
-        
-            }
-        
-            renderWeightingPage();
-        
-        }
-
-    }
-
-    catch (error) {
-
-        console.error(error);
-
-    }
-
-}
-
-function renderWaitingRoom() {
+function renderScoringComplete() {
 
     const survey =
         document.getElementById(
@@ -756,30 +1140,38 @@ function renderWaitingRoom() {
         <div class="card">
 
             <h2>
-                Assessment Complete
+                Scoring Complete
             </h2>
 
             <p>
-                Thank you for completing
-                the pathway assessment.
+                Your pathway scores
+                have been recorded.
             </p>
 
             <p>
-                Please wait for
-                instructions from the
-                facilitator.
+                Please return your attention
+                to the workshop facilitator.
             </p>
 
-            <h3 id="stageStatus">
-                Current stage:
-                SCORING
-            </h3>
+            <p>
+                When instructed, scan the
+                <strong>Criteria Weighting QR code</strong>
+                to continue.
+            </p>
 
+            <div class="participant-recovery-code">
+
+            <p>
+                If asked, your participant code is:
+            </p>
+        
+            <strong>
+                ${participantId}
+            </strong>
+        
         </div>
 
     `;
-
-    startStagePolling();
 
 }
 
@@ -1378,15 +1770,6 @@ async function submitSurvey() {
 
     taskCompleted =
         true;
-
-    if (pollingInterval) {
-
-        clearInterval(
-            pollingInterval
-        );
-
-        pollingInterval =
-            null;
 
     }
 
