@@ -1,38 +1,181 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Workshop Facilitator</title>
 
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Workshop Participant Access
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css">
+
+    https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js    </script>
+
 </head>
 
 <body>
 
-    <div class="card">
+    <main class="facilitator-access-page">
 
-        <h1>Pathways to Flexibility</h1>
+        <header class="facilitator-access-header">
 
-        <h2>Participant Access</h2>
+            <h1>
+                Pathways to Flexibility
+            </h1>
 
-        <p>
-            Scan the QR code to join the survey.
-        </p>
+            <p>
+                Display the relevant QR code
+                when participants should access
+                each workshop activity.
+            </p>
 
-        <img
-            src="survey-qr.png"
-            alt="Survey QR Code"
-            style="max-width:300px; width:100%; display:block; margin:auto;">
-        
-        <p>
-            Survey URL:
-        </p>
-        
-        <p>
-            https://viijuliani.github.io/pathways-workshop/
-        </p>
-    </div>
+        </header>
+
+        <section class="qr-code-grid">
+
+            <article class="qr-code-card">
+
+                <p class="qr-code-step">
+                    Step 1
+                </p>
+
+                <h2>
+                    Pathway Scoring
+                </h2>
+
+                <p>
+                    Use this QR code at the
+                    beginning of the workshop.
+                </p>
+
+                <div
+                    id="scoringQrCode"
+                    class="qr-code-container">
+                </div>
+
+                <a
+                    id="scoringLink"
+                    class="participant-access-link"
+                    target="_blank"
+                    rel="noopener noreferrer">
+
+                    Open scoring page
+
+                </a>
+
+            </article>
+
+            <article class="qr-code-card">
+
+                <p class="qr-code-step">
+                    Step 2
+                </p>
+
+                <h2>
+                    Criteria Weighting
+                </h2>
+
+                <p>
+                    Display this QR code after
+                    opening the weighting stage.
+                </p>
+
+                <div
+                    id="weightingQrCode"
+                    class="qr-code-container">
+                </div>
+
+                <a
+                    id="weightingLink"
+                    class="participant-access-link"
+                    target="_blank"
+                    rel="noopener noreferrer">
+
+                    Open weighting page
+
+                </a>
+
+            </article>
+
+        </section>
+
+    </main>
+
+    <script>
+
+        const SITE_BASE_URL =
+            "https://vjulianipereira.github.io/pathways-workshop/";
+
+        const scoringUrl =
+            SITE_BASE_URL +
+            "index.html?phase=scoring";
+
+        const weightingUrl =
+            SITE_BASE_URL +
+            "index.html?phase=weighting";
+
+        document
+            .getElementById(
+                "scoringLink"
+            )
+            .href =
+            scoringUrl;
+
+        document
+            .getElementById(
+                "weightingLink"
+            )
+            .href =
+            weightingUrl;
+
+        new QRCode(
+            document.getElementById(
+                "scoringQrCode"
+            ),
+            {
+                text:
+                    scoringUrl,
+
+                width:
+                    240,
+
+                height:
+                    240,
+
+                correctLevel:
+                    QRCode.CorrectLevel.H
+            }
+        );
+
+        new QRCode(
+            document.getElementById(
+                "weightingQrCode"
+            ),
+            {
+                text:
+                    weightingUrl,
+
+                width:
+                    240,
+
+                height:
+                    240,
+
+                correctLevel:
+                    QRCode.CorrectLevel.H
+            }
+        );
+
+    </script>
 
 </body>
 
