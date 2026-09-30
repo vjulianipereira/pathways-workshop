@@ -94,6 +94,14 @@ async function initialiseWeightingAccess() {
         const config =
             await loadWorkshopConfiguration();
 
+        if (!participantId) {
+
+            renderParticipantCodeEntry();
+        
+            return;
+        
+        }
+
         const completedSubmissionKey =
             `surveySubmitted_${workshopId}`;
 
@@ -337,6 +345,186 @@ function renderScoringRequired() {
 
 }
 
+function renderParticipantCodeEntry() {
+
+    const survey =
+        document.getElementById(
+            "survey"
+        );
+
+    survey.innerHTML = `
+
+        <div class="card">
+
+            <h2>
+                Enter Participant Code
+            </h2>
+
+            <p>
+                Enter the eight-character code
+                shown after pathway scoring.
+            </p>
+
+            <div class="participant-code-form">
+
+                <label
+                    for="participantCodeInput">
+
+                    Participant code
+
+                </label>
+
+                <input
+                    id="participantCodeInput"
+                    type="text"
+                    inputmode="text"
+                    autocomplete="off"
+                    autocapitalize="characters"
+                    maxlength="8"
+                    placeholder="Example: K7M4Q2XZ">
+
+                <p
+                    id="participantCodeStatus"
+                    class="participant-code-status">
+                </p>
+
+                <div class="button-row">
+
+                    <button
+                        id="continueWithCodeBtn"
+                        class="app-button app-button-primary"
+                        type="button">
+
+                        Continue
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+    const input =
+        document.getElementById(
+            "participantCodeInput"
+        );
+
+    input.addEventListener(
+        "input",
+        () => {
+
+            input.value =
+                input.value
+                    .toUpperCase()
+                    .replace(
+                        /[^A-Z2-9]/g,
+                        ""
+                    )
+                    .slice(
+                        0,
+                        8
+                    );
+
+        }
+    );
+
+    document
+        .getElementById(
+            "continueWithCodeBtn"
+        )
+        .addEventListener(
+            "click",
+            async () => {
+
+                const code =
+                    input.value
+                        .trim()
+                        .toUpperCase();
+
+                const statusElement =
+                    document.getElementById(
+                        "participantCodeStatus"
+                    );
+
+                if (
+                    code.length !== 8
+                ) {
+
+                    statusElement.textContent =
+                        "Enter the complete eight-character code.";
+
+                    return;
+
+                }
+
+                const recoveredParticipantId =
+                    workshopId +
+                    "-P-" +
+                    code;
+
+                participantId =
+                    recoveredParticipantId;
+
+                statusElement.textContent =
+                    "Checking code...";
+
+                try {
+
+                    const status =
+                        await getParticipantSubmissionStatus();
+
+                    if (
+                        status.scoringPathwayCount <
+                        pathways.length
+                    ) {
+
+                        participantId =
+                            "";
+
+                        statusElement.textContent =
+                            "No completed scoring was found for that code.";
+
+                        return;
+
+                    }
+
+                    localStorage.setItem(
+                        `participantId_${workshopId}`,
+                        recoveredParticipantId
+                    );
+
+                    localStorage.setItem(
+                        `participantCode_${workshopId}`,
+                        code
+                    );
+
+                    initialiseWeightingAccess();
+
+                }
+
+                catch (error) {
+
+                    participantId =
+                        "";
+
+                    console.error(
+                        "Participant-code recovery error:",
+                        error
+                    );
+
+                    statusElement.textContent =
+                        "The code could not be checked. Try again.";
+
+                }
+
+            }
+        );
+
+}
+
 function renderWeightingNotOpen() {
 
     const survey =
@@ -464,6 +652,37 @@ function showWelcomeScreen() {
 
 }
 
+function createParticipantCode() {
+
+    const alphabet =
+        "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+    let code =
+        "";
+
+    for (
+        let index = 0;
+        index < 8;
+        index++
+    ) {
+
+        const randomIndex =
+            Math.floor(
+                Math.random() *
+                alphabet.length
+            );
+
+        code +=
+            alphabet[
+                randomIndex
+            ];
+
+    }
+
+    return code;
+
+}
+
 async function loadWorkshopConfiguration() {
 
     const response =
@@ -516,36 +735,71 @@ async function loadWorkshopConfiguration() {
 
     }
 
-    const participantIdKey =
-        `participantId_${workshopId}`;
-
-    const storedParticipantId =
-        localStorage.getItem(
-            participantIdKey
-        );
-
-    if (storedParticipantId) {
-
-        participantId =
-            storedParticipantId;
-
-    } else {
-
-        participantId =
-            workshopId +
-            "-P" +
-            Date.now() +
-            "-" +
-            Math.floor(
-                Math.random() * 100000
+        const participantIdKey =
+            `participantId_${workshopId}`;
+        
+        const participantCodeKey =
+            `participantCode_${workshopId}`;
+        
+        const storedParticipantId =
+            localStorage.getItem(
+                participantIdKey
+            ) ||
+            sessionStorage.getItem(
+                participantIdKey
+            );
+        
+        const storedParticipantCode =
+            localStorage.getItem(
+                participantCodeKey
+            );
+        
+        if (storedParticipantId) {
+        
+            participantId =
+                storedParticipantId;
+        
+        } else if (
+            accessPhase ===
+            "scoring"
+        ) {
+        
+            const participantCode =
+                storedParticipantCode ||
+                createParticipantCode();
+        
+            participantId =
+                workshopId +
+                "-P-" +
+                participantCode;
+        
+            localStorage.setItem(
+                participantIdKey,
+                participantId
             );
 
-        localStorage.setItem(
-            participantIdKey,
-            participantId
-        );
+            sessionStorage.setItem(
+                participantIdKey,
+                participantId
+            );
+        
+            localStorage.setItem(
+                participantCodeKey,
+                participantCode
+            );
 
-    }
+            sessionStorage.setItem(
+                participantCodeKey,
+                participantCode
+            );
+                    
+        } else {
+        
+            participantId =
+                "";
+
+        }
+
 
     return data;
 
@@ -1135,6 +1389,17 @@ function renderScoringComplete() {
             "survey"
         );
 
+    const participantCodeKey =
+        `participantCode_${workshopId}`;
+
+    const participantCode =
+        localStorage.getItem(
+            participantCodeKey
+        ) ||
+        participantId
+            .split("-P-")
+            .pop();
+
     survey.innerHTML = `
 
         <div class="card">
@@ -1148,6 +1413,29 @@ function renderScoringComplete() {
                 have been recorded.
             </p>
 
+            <div class="participant-code-card">
+
+                <p>
+                    Keep this code for
+                    criteria weighting:
+                </p>
+
+                <strong class="participant-code">
+
+                    ${participantCode}
+
+                </strong>
+
+                <p class="participant-code-note">
+
+                    Take a screenshot or write down
+                    this code. The code may be needed
+                    when scanning the weighting QR code.
+
+                </p>
+
+            </div>
+
             <p>
                 Please return your attention
                 to the workshop facilitator.
@@ -1159,16 +1447,6 @@ function renderScoringComplete() {
                 to continue.
             </p>
 
-            <div class="participant-recovery-code">
-
-            <p>
-                If asked, your participant code is:
-            </p>
-        
-            <strong>
-                ${participantId}
-            </strong>
-        
         </div>
 
     `;
