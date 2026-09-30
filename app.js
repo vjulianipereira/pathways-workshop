@@ -1751,202 +1751,198 @@ function buildWeightedResults() {
 
 async function submitSurvey() {
 
-    if (
-        weightingSubmissionInProgress ||
-        taskCompleted
-    ) {
-
-        return;
-
-    }
-
-    weightingSubmissionInProgress =
-        true;
-
-    const survey =
-        document.getElementById(
-            "survey"
-        );
-
-    taskCompleted =
-        true;
-
-    }
-
-    survey.innerHTML = `
-
-        <div class="card">
-
-            <h2>
-                Submitting...
-            </h2>
-
-            <p>
-                Please wait while your
-                criterion weights are recorded.
-            </p>
-
-        </div>
-
-    `;
-
-    try {
-
-        if (!scoringSubmitted) {
-
-            await waitForSubmissionStatus(
-                "SCORING"
-            );
-
-            scoringSubmitted =
-                true;
-
+        if (
+            weightingSubmissionInProgress ||
+            taskCompleted
+        ) {
+            return;
         }
-
-        const weightedResults =
-            buildWeightedResults();
-
-        const payload = {
-
-            action:
-                "submitWeighting",
-
-            workshopId:
-                workshopId,
-
-            participantId:
-                participantId,
-
-            weights:
-                weights,
-
-            weightedResults:
-                weightedResults
-
-        };
-
-        console.log(
-            "Submitting weighting payload:",
-            payload
-        );
-
-        await fetch(API_URL, {
-
-            method: "POST",
-
-            mode: "no-cors",
-
-            body:
-                JSON.stringify(
-                    payload
-                )
-
-        });
-
-        console.log(
-            "Weighting POST request sent."
-        );
-
-        const status =
-            await waitForSubmissionStatus(
-                "WEIGHTING"
-            );
-
-        console.log(
-            "Weighting submission confirmed:",
-            status
-        );
-
-        localStorage.setItem(
-            `surveySubmitted_${workshopId}`,
-            "true"
-        );
-
-        survey.innerHTML = `
-
-            <div class="card">
-
-                <h2>
-                    Task Complete
-                </h2>
-
-                <p>
-                    Thank you for participating.
-                </p>
-
-                <p>
-                    Your responses have been recorded.
-                </p>
-
-                <p>
-                    Please return your attention
-                    to the workshop facilitator.
-                </p>
-
-            </div>
-
-        `;
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Weighting submission error:",
-            error
-        );
-
-        taskCompleted =
-            false;
-
-        survey.innerHTML = `
-
-            <div class="card">
-
-                <h2>
-                    Submission Failed
-                </h2>
-
-                <p>
-                    ${error.message}
-                </p>
-
-                <p>
-                    Check your connection
-                    and try again.
-                </p>
-
-                <div class="button-row">
-
-                    <button
-                        id="retryWeightingBtn"
-                        class="app-button app-button-primary"
-                        type="button">
-                        Try Again
-                    </button>
-
-                </div>
-
-            </div>
-
-        `;
-
-        document
-            .getElementById(
-                "retryWeightingBtn"
-            )
-            .addEventListener(
-                "click",
-                submitSurvey
-            );
-
-    }
-
-    finally {
-
+    
         weightingSubmissionInProgress =
-            false;
+            true;
+    
+        const survey =
+            document.getElementById(
+                "survey"
+            );
+    
+        taskCompleted =
+            true;
 
-    }
+            survey.innerHTML = `
+        
+                <div class="card">
+        
+                    <h2>
+                        Submitting...
+                    </h2>
+        
+                    <p>
+                        Please wait while your
+                        criterion weights are recorded.
+                    </p>
+        
+                </div>
+        
+            `;
+        
+            try {
+        
+                if (!scoringSubmitted) {
+        
+                    await waitForSubmissionStatus(
+                        "SCORING"
+                    );
+        
+                    scoringSubmitted =
+                        true;
+        
+                }
+        
+                const weightedResults =
+                    buildWeightedResults();
+        
+                const payload = {
+        
+                    action:
+                        "submitWeighting",
+        
+                    workshopId:
+                        workshopId,
+        
+                    participantId:
+                        participantId,
+        
+                    weights:
+                        weights,
+        
+                    weightedResults:
+                        weightedResults
+        
+                };
+        
+                console.log(
+                    "Submitting weighting payload:",
+                    payload
+                );
+        
+                await fetch(API_URL, {
+        
+                    method: "POST",
+        
+                    mode: "no-cors",
+        
+                    body:
+                        JSON.stringify(
+                            payload
+                        )
+        
+                });
+        
+                console.log(
+                    "Weighting POST request sent."
+                );
+        
+                const status =
+                    await waitForSubmissionStatus(
+                        "WEIGHTING"
+                    );
+        
+                console.log(
+                    "Weighting submission confirmed:",
+                    status
+                );
+        
+                localStorage.setItem(
+                    `surveySubmitted_${workshopId}`,
+                    "true"
+                );
+        
+                survey.innerHTML = `
+        
+                    <div class="card">
+        
+                        <h2>
+                            Task Complete
+                        </h2>
+        
+                        <p>
+                            Thank you for participating.
+                        </p>
+        
+                        <p>
+                            Your responses have been recorded.
+                        </p>
+        
+                        <p>
+                            Please return your attention
+                            to the workshop facilitator.
+                        </p>
+        
+                    </div>
+        
+                `;
+        
+            }
+        
+            catch (error) {
+        
+                console.error(
+                    "Weighting submission error:",
+                    error
+                );
+        
+                taskCompleted =
+                    false;
+        
+                survey.innerHTML = `
+        
+                    <div class="card">
+        
+                        <h2>
+                            Submission Failed
+                        </h2>
+        
+                        <p>
+                            ${error.message}
+                        </p>
+        
+                        <p>
+                            Check your connection
+                            and try again.
+                        </p>
+        
+                        <div class="button-row">
+        
+                            <button
+                                id="retryWeightingBtn"
+                                class="app-button app-button-primary"
+                                type="button">
+                                Try Again
+                            </button>
+        
+                        </div>
+        
+                    </div>
+        
+                `;
+        
+                document
+                    .getElementById(
+                        "retryWeightingBtn"
+                    )
+                    .addEventListener(
+                        "click",
+                        submitSurvey
+                    );
+        
+            }
+        
+            finally {
+        
+                weightingSubmissionInProgress =
+                    false;
+        
+            }
 
 }
