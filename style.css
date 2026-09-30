@@ -1351,3 +1351,93 @@ h3 {
     min-height: 20px;
     color: #2563eb;
     font
+
+    /* ===== PARTICIPANT RECOVERY CODE ===== */
+
+.participant-code-card {
+    margin: 24px 0;
+    padding: 20px;
+
+    color: #1e3a8a;
+    background: #eff6ff;
+
+    border: 2px solid #bfdbfe;
+    border-radius: 12px;
+
+    text-align: center;
+}
+
+.participant-code {
+    display: block;
+
+    margin: 12px 0;
+
+    color: #0f172a;
+
+    font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        Consolas,
+        monospace;
+
+    font-size: clamp(
+        1.8rem,
+        7vw,
+        3rem
+    );
+
+    font-weight: 800;
+    letter-spacing: 0.12em;
+}
+
+.participant-code-note {
+    margin-bottom: 0;
+    color: #475569;
+    font-size: 0.9rem;
+}
+
+.participant-code-form {
+    margin-top: 22px;
+}
+
+.participant-code-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+#participantCodeInput {
+    width: 100%;
+    padding: 14px;
+
+    border: 2px solid #cbd5e1;
+    border-radius: 9px;
+
+    font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        Consolas,
+        monospace;
+
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+#participantCodeInput:focus {
+    border-color: #2563eb;
+    outline: 3px solid rgba(37, 99, 235, 0.2);
+}
+
+.participant-code-status {
+    min-height: 22px;
+    margin: 10px 0;
+    color: #b91c1c;
+    font-weight: 600;
+}
