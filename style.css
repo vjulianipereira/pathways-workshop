@@ -1441,3 +1441,61 @@ h3 {
     color: #b91c1c;
     font-weight: 600;
 }
+
+/* ===== PARTICIPANT INITIALS ===== */
+
+.initials-guidance {
+    margin-bottom: 22px;
+    color: #475569;
+    line-height: 1.6;
+}
+
+.participant-initials-form {
+    margin-top: 20px;
+}
+
+.participant-initials-form label {
+    display: block;
+    margin-bottom: 8px;
+
+    color: #0f172a;
+    font-weight: 700;
+}
+
+#participantInitialsInput {
+    width: 100%;
+    padding: 14px;
+
+    color: #0f172a;
+    background: #ffffff;
+
+    border: 2px solid #cbd5e1;
+    border-radius: 9px;
+
+    font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        Consolas,
+        monospace;
+
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+#participantInitialsInput:focus {
+    border-color: #2563eb;
+    outline: 3px solid rgba(37, 99, 235, 0.2);
+}
+
+.participant-initials-status {
+    min-height: 22px;
+    margin: 10px 0;
+
+    color: #b91c1c;
+    font-weight: 600;
+}
