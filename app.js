@@ -784,72 +784,260 @@ function renderWaitingRoom() {
 }
 
 function renderWeightingPage() {
-    
-        if (taskCompleted) {
-    
+
+    if (taskCompleted) {
+
         return;
-    
+
     }
+
     const survey =
-        document.getElementById("survey");
+        document.getElementById(
+            "survey"
+        );
+
+    const totalAllocated =
+        getTotalWeight();
+
+    const remainingVotes =
+        weightBudget -
+        totalAllocated;
 
     let html = `
+
         <div class="card">
 
-            <h2>Criteria Importance</h2>
-            
+            <h2>
+                Criteria Importance
+            </h2>
+
             <p>
-                Allocate exactly ${weightBudget} importance points.
+                Allocate your
+                <strong>${weightBudget} votes</strong>
+                across the criteria.
             </p>
-    `;
 
-    criteria.forEach((criterion, index) => {
+            <p class="weighting-instructions">
 
-        if (!weights[criterion]) {
-            weights[criterion] = 0;
-        }
+                Select circles to allocate votes.
 
-        html += `
-            <div class="weight-row">
+                You may give several votes to one
+                criterion and no votes to another.
 
-                <span>${criterion}</span>
+                Criteria receiving no additional votes
+                retain their baseline influence.
+
+            </p>
+
+            <div class="vote-budget-summary">
 
                 <div>
 
-                    <button
-                        class="minus-btn"
-                        data-criterion="${criterion}">
-                        -
-                    </button>
+                    Votes allocated:
 
-                    <span
-                        id="weight-${index}"
-                        class="weight-value">
-                        ${weights[criterion]}
-                    </span>
+                    <strong>
+                        ${totalAllocated}
+                    </strong>
 
-                    <button
-                        class="plus-btn"
-                        data-criterion="${criterion}">
-                        +
-                    </button>
+                    of
+
+                    <strong>
+                        ${weightBudget}
+                    </strong>
+
+                </div>
+
+                <div>
+
+                    Votes remaining:
+
+                    <strong
+                        class="${
+                            remainingVotes === 0
+                                ? "vote-budget-complete"
+                                : ""
+                        }">
+
+                        ${remainingVotes}
+
+                    </strong>
 
                 </div>
 
             </div>
-        `;
 
-    });
+    `;
+
+    criteria.forEach(
+        (criterion, criterionIndex) => {
+
+            if (
+                weights[criterion] ===
+                undefined
+            ) {
+
+                weights[criterion] = 0;
+
+            }
+
+            const allocatedVotes =
+                Number(
+                    weights[criterion]
+                );
+
+            let voteCircles = "";
+
+            for (
+                let voteNumber = 1;
+                voteNumber <= weightBudget;
+                voteNumber++
+            ) {
+
+                const isFilled =
+                    voteNumber <=
+                    allocatedVotes;
+
+                const additionalVotesRequired =
+                    Math.max(
+                        voteNumber -
+                        allocatedVotes,
+                        0
+                    );
+
+                const exceedsRemainingBudget =
+                    additionalVotesRequired >
+                    remainingVotes;
+
+                voteCircles += `
+
+                    <button
+                        class="
+                            vote-circle
+                            ${
+                                isFilled
+                                    ? "vote-circle-filled"
+                                    : ""
+                            }
+                        "
+                        type="button"
+
+                        data-criterion-index="${criterionIndex}"
+
+                        data-vote-number="${voteNumber}"
+
+                        aria-label="${criterion}: allocate ${voteNumber} ${
+                            voteNumber === 1
+                                ? "vote"
+                                : "votes"
+                        }"
+
+                        aria-pressed="${
+                            voteNumber ===
+                            allocatedVotes
+                        }"
+
+                        ${
+                            exceedsRemainingBudget
+                                ? "disabled"
+                                : ""
+                        }>
+
+                        <span aria-hidden="true">
+
+                            ${
+                                isFilled
+                                    ? "✓"
+                                    : ""
+                            }
+
+                        </span>
+
+                    </button>
+
+                `;
+
+            }
+
+            html += `
+
+                <div class="criterion-vote-row">
+
+                    <div class="criterion-vote-header">
+
+                        <span class="criterion-vote-name">
+
+                            ${criterion}
+
+                        </span>
+
+                        <span class="criterion-vote-value">
+
+                            ${allocatedVotes}
+
+                            ${
+                                allocatedVotes === 1
+                                    ? "vote"
+                                    : "votes"
+                            }
+
+                        </span>
+
+                    </div>
+
+                    <div class="vote-control-row">
+
+                        <div
+                            class="vote-circles"
+                            role="group"
+                            aria-label="Votes allocated to ${criterion}">
+
+                            ${voteCircles}
+
+                        </div>
+
+                        <button
+                            class="clear-criterion-votes"
+                            type="button"
+                            data-criterion-index="${criterionIndex}"
+
+                            ${
+                                allocatedVotes === 0
+                                    ? "disabled"
+                                    : ""
+                            }>
+
+                            Clear
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+    );
 
     html += `
 
             <div class="allocation">
 
-                Total Allocated:
-                <span id="totalAllocated">
-                    ${getTotalWeight()}
-                </span>
-                    / ${weightBudget}
+                Total allocated:
+
+                <strong id="totalAllocated">
+
+                    ${totalAllocated}
+
+                </strong>
+
+                /
+
+                <strong>
+
+                    ${weightBudget}
+
+                </strong>
 
             </div>
 
@@ -857,17 +1045,34 @@ function renderWeightingPage() {
 
                 <button
                     id="submitBtn"
-                    ${getTotalWeight() !== weightBudget ? "disabled" : ""}
-                >
+                    class="app-button app-button-primary"
+                    type="button"
+
+                    ${
+                        totalAllocated !==
+                        weightBudget
+                            ? "disabled"
+                            : ""
+                    }>
+
                     Complete Task
+
+                    <span
+                        class="button-arrow"
+                        aria-hidden="true">
+                        →
+                    </span>
+
                 </button>
 
             </div>
 
         </div>
+
     `;
 
-    survey.innerHTML = html;
+    survey.innerHTML =
+        html;
 
     attachWeightEvents();
 
@@ -875,71 +1080,166 @@ function renderWeightingPage() {
 
 function getTotalWeight() {
 
-    return Object.values(weights)
-        .reduce((sum, value) => sum + value, 0);
+    return Object.values(
+        weights
+    ).reduce(
+        (sum, value) =>
+            sum +
+            Number(value || 0),
+        0
+    );
 
 }
 
 function attachWeightEvents() {
 
     document
-        .querySelectorAll(".plus-btn")
+        .querySelectorAll(
+            ".vote-circle"
+        )
         .forEach(button => {
 
-            button.addEventListener("click", () => {
+            button.addEventListener(
+                "click",
+                () => {
 
-                const criterion =
-                    button.dataset.criterion;
+                    const criterionIndex =
+                        Number(
+                            button.dataset
+                                .criterionIndex
+                        );
 
-                if (getTotalWeight() < weightBudget) {
+                    const selectedVotes =
+                        Number(
+                            button.dataset
+                                .voteNumber
+                        );
 
-                    weights[criterion]++;
+                    const criterion =
+                        criteria[
+                            criterionIndex
+                        ];
+
+                    if (
+                        !criterion ||
+                        !Number.isFinite(
+                            selectedVotes
+                        )
+                    ) {
+
+                        return;
+
+                    }
+
+                    const currentVotes =
+                        Number(
+                            weights[criterion] ||
+                            0
+                        );
+
+                    /*
+                     * Clicking the currently selected
+                     * value removes all votes from
+                     * that criterion.
+                     */
+
+                    const proposedVotes =
+                        selectedVotes ===
+                        currentVotes
+                            ? 0
+                            : selectedVotes;
+
+                    const proposedTotal =
+                        getTotalWeight() -
+                        currentVotes +
+                        proposedVotes;
+
+                    if (
+                        proposedTotal >
+                        weightBudget
+                    ) {
+
+                        alert(
+                            `You only have ${weightBudget} votes to allocate.`
+                        );
+
+                        return;
+
+                    }
+
+                    weights[criterion] =
+                        proposedVotes;
 
                     renderWeightingPage();
 
                 }
-
-            });
-
-        });
-
-    document
-        .querySelectorAll(".minus-btn")
-        .forEach(button => {
-
-            button.addEventListener("click", () => {
-
-                const criterion =
-                    button.dataset.criterion;
-
-                if (weights[criterion] > 0) {
-
-                    weights[criterion]--;
-
-                    renderWeightingPage();
-
-                }
-
-            });
-
-        });
-
-    document
-    .getElementById("submitBtn")
-    .addEventListener("click", () => {
-
-        if (getTotalWeight() !== weightBudget) {
-
-            alert(
-                `Please allocate exactly ${weightBudget} weighting points before submitting.`
             );
 
-            return;
+        });
+
+    document
+        .querySelectorAll(
+            ".clear-criterion-votes"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    const criterionIndex =
+                        Number(
+                            button.dataset
+                                .criterionIndex
+                        );
+
+                    const criterion =
+                        criteria[
+                            criterionIndex
+                        ];
+
+                    if (!criterion) {
+
+                        return;
+
+                    }
+
+                    weights[criterion] =
+                        0;
+
+                    renderWeightingPage();
+
+                }
+            );
+
+        });
+
+    const submitButton =
+        document.getElementById(
+            "submitBtn"
+        );
+
+    submitButton.addEventListener(
+        "click",
+        () => {
+
+            if (
+                getTotalWeight() !==
+                weightBudget
+            ) {
+
+                alert(
+                    `Please allocate all ${weightBudget} votes before submitting.`
+                );
+
+                return;
+
+            }
+
+            submitSurvey();
+
         }
-
-        submitSurvey();
-
-    });
+    );
 
 }
 
@@ -972,14 +1272,31 @@ function calculateUnweightedAverage(pathway) {
 
 function calculateWeightedAverage(pathway) {
 
-    let totalWeightedScore = 0;
+    let totalWeightedScore =
+        0;
 
-    let totalWeight = 0;
+    let totalEffectiveWeight =
+        0;
 
     criteria.forEach(criterion => {
 
-        const weight =
-            weights[criterion];
+        const allocatedVotes =
+            Number(
+                weights[criterion] ||
+                0
+            );
+
+        /*
+         * Every criterion has a baseline
+         * weight of 1.
+         *
+         * Allocated votes increase that
+         * influence.
+         */
+
+        const effectiveWeight =
+            1 +
+            allocatedVotes;
 
         const score =
             responses[pathway][criterion];
@@ -991,13 +1308,18 @@ function calculateWeightedAverage(pathway) {
             ) / 2;
 
         totalWeightedScore +=
-            midpoint * weight;
+            midpoint *
+            effectiveWeight;
 
-        totalWeight += weight;
+        totalEffectiveWeight +=
+            effectiveWeight;
 
     });
 
-    return totalWeightedScore / totalWeight;
+    return (
+        totalWeightedScore /
+        totalEffectiveWeight
+    );
 
 }
 
