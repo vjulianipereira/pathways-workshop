@@ -357,45 +357,54 @@ function renderParticipantCodeEntry() {
         <div class="card">
 
             <h2>
-                Enter Participant Code
+                Enter Your Initials
             </h2>
 
             <p>
-                Enter the eight-character code
-                shown after pathway scoring.
+                Enter the same full-name initials
+                used for pathway scoring.
             </p>
 
-            <div class="participant-code-form">
+            <p class="initials-guidance">
+
+                For example, Vinicius Juliani Pereira
+                would enter
+
+                <strong>VJP</strong>.
+
+            </p>
+
+            <div class="participant-initials-form">
 
                 <label
-                    for="participantCodeInput">
+                    for="participantInitialsInput">
 
-                    Participant code
+                    Full-name initials
 
                 </label>
 
                 <input
-                    id="participantCodeInput"
+                    id="participantInitialsInput"
                     type="text"
                     inputmode="text"
                     autocomplete="off"
                     autocapitalize="characters"
                     maxlength="8"
-                    placeholder="Example: K7M4Q2XZ">
+                    placeholder="Example: VJP">
 
                 <p
-                    id="participantCodeStatus"
-                    class="participant-code-status">
+                    id="participantInitialsStatus"
+                    class="participant-initials-status">
                 </p>
 
                 <div class="button-row">
 
                     <button
-                        id="continueWithCodeBtn"
+                        id="continueWeightingBtn"
                         class="app-button app-button-primary"
                         type="button">
 
-                        Continue
+                        Continue to Weighting
 
                     </button>
 
@@ -409,119 +418,130 @@ function renderParticipantCodeEntry() {
 
     const input =
         document.getElementById(
-            "participantCodeInput"
+            "participantInitialsInput"
         );
+
+    input.focus();
 
     input.addEventListener(
         "input",
         () => {
 
             input.value =
-                input.value
-                    .toUpperCase()
-                    .replace(
-                        /[^A-Z2-9]/g,
-                        ""
-                    )
-                    .slice(
-                        0,
-                        8
-                    );
+                normaliseInitials(
+                    input.value
+                );
 
         }
     );
 
     document
         .getElementById(
-            "continueWithCodeBtn"
+            "continueWeightingBtn"
         )
         .addEventListener(
             "click",
-            async () => {
-
-                const code =
-                    input.value
-                        .trim()
-                        .toUpperCase();
-
-                const statusElement =
-                    document.getElementById(
-                        "participantCodeStatus"
-                    );
-
-                if (
-                    code.length !== 8
-                ) {
-
-                    statusElement.textContent =
-                        "Enter the complete eight-character code.";
-
-                    return;
-
-                }
-
-                const recoveredParticipantId =
-                    workshopId +
-                    "-P-" +
-                    code;
-
-                participantId =
-                    recoveredParticipantId;
-
-                statusElement.textContent =
-                    "Checking code...";
-
-                try {
-
-                    const status =
-                        await getParticipantSubmissionStatus();
-
-                    if (
-                        status.scoringPathwayCount <
-                        pathways.length
-                    ) {
-
-                        participantId =
-                            "";
-
-                        statusElement.textContent =
-                            "No completed scoring was found for that code.";
-
-                        return;
-
-                    }
-
-                    localStorage.setItem(
-                        `participantId_${workshopId}`,
-                        recoveredParticipantId
-                    );
-
-                    localStorage.setItem(
-                        `participantCode_${workshopId}`,
-                        code
-                    );
-
-                    initialiseWeightingAccess();
-
-                }
-
-                catch (error) {
-
-                    participantId =
-                        "";
-
-                    console.error(
-                        "Participant-code recovery error:",
-                        error
-                    );
-
-                    statusElement.textContent =
-                        "The code could not be checked. Try again.";
-
-                }
-
-            }
+            recoverParticipantByInitials
         );
+
+}
+
+async function recoverParticipantByInitials() {
+
+    const input =
+        document.getElementById(
+            "participantInitialsInput"
+        );
+
+    const statusElement =
+        document.getElementById(
+            "participantInitialsStatus"
+        );
+
+    const button =
+        document.getElementById(
+            "continueWeightingBtn"
+        );
+
+    const initials =
+        normaliseInitials(
+            input.value
+        );
+
+    if (
+        initials.length < 2
+    ) {
+
+        statusElement.textContent =
+            "Enter the initials used during scoring.";
+
+        return;
+
+    }
+
+    button.disabled =
+        true;
+
+    statusElement.textContent =
+        "Checking scoring submission...";
+
+    const recoveredParticipantId =
+        buildParticipantIdFromInitials(
+            initials
+        );
+
+    participantId =
+        recoveredParticipantId;
+
+    try {
+
+        const status =
+            await getParticipantSubmissionStatus();
+
+        if (
+            status.scoringPathwayCount <
+            pathways.length
+        ) {
+
+            participantId =
+                "";
+
+            statusElement.textContent =
+                "No completed scoring was found " +
+                "for these initials.";
+
+            button.disabled =
+                false;
+
+            return;
+
+        }
+
+        storeParticipantIdentity(
+            initials
+        );
+
+        initialiseWeightingAccess();
+
+    }
+
+    catch (error) {
+
+        participantId =
+            "";
+
+        console.error(
+            "Initials recovery error:",
+            error
+        );
+
+        statusElement.textContent =
+            "The scoring submission could not be checked.";
+
+        button.disabled =
+            false;
+
+    }
 
 }
 
@@ -647,39 +667,543 @@ function showWelcomeScreen() {
     `;
 
     document
-        .getElementById("startBtn")
-        .addEventListener("click", loadCriteria);
+        .getElementById(
+            "startBtn"
+        )
+        .addEventListener(
+            "click",
+            beginScoringAccess
+        );
 
 }
 
-function createParticipantCode() {
+async function beginScoringAccess() {
 
-    const alphabet =
-        "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    const survey =
+        document.getElementById(
+            "survey"
+        );
 
-    let code =
-        "";
+    survey.innerHTML = `
 
-    for (
-        let index = 0;
-        index < 8;
-        index++
-    ) {
+        <div class="card">
 
-        const randomIndex =
-            Math.floor(
-                Math.random() *
-                alphabet.length
+            <p>
+                Loading workshop...
+            </p>
+
+        </div>
+
+    `;
+
+    try {
+
+        await loadWorkshopConfiguration();
+
+        const completedSubmissionKey =
+            `surveySubmitted_${workshopId}`;
+
+        if (
+            localStorage.getItem(
+                completedSubmissionKey
+            )
+        ) {
+
+            renderTaskAlreadyCompleted();
+
+            return;
+
+        }
+
+        const existingInitials =
+            getStoredParticipantInitials();
+
+        if (
+            participantId &&
+            existingInitials
+        ) {
+
+            const status =
+                await getParticipantSubmissionStatus();
+
+            if (
+                status.scoringPathwayCount >=
+                pathways.length
+            ) {
+
+                renderScoringComplete();
+
+                return;
+
+            }
+
+            renderInitialsConfirmation(
+                existingInitials
             );
 
-        code +=
-            alphabet[
-                randomIndex
-            ];
+            return;
+
+        }
+
+        renderInitialsEntry();
 
     }
 
-    return code;
+    catch (error) {
+
+        console.error(
+            "Scoring access error:",
+            error
+        );
+
+        survey.innerHTML = `
+
+            <div class="card">
+
+                <h2>
+                    Workshop Could Not Be Loaded
+                </h2>
+
+                <p>
+                    ${error.message}
+                </p>
+
+                <div class="button-row">
+
+                    <button
+                        id="retryScoringAccessBtn"
+                        class="app-button app-button-primary"
+                        type="button">
+
+                        Try Again
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+        document
+            .getElementById(
+                "retryScoringAccessBtn"
+            )
+            .addEventListener(
+                "click",
+                beginScoringAccess
+            );
+
+    }
+
+}
+
+function renderInitialsEntry(
+    message = ""
+) {
+
+    const survey =
+        document.getElementById(
+            "survey"
+        );
+
+    survey.innerHTML = `
+
+        <div class="card">
+
+            <h2>
+                Participant Initials
+            </h2>
+
+            <p>
+                Enter the initials of your full name.
+            </p>
+
+            <p class="initials-guidance">
+
+                For example, Vinicius Juliani Pereira
+                would enter
+
+                <strong>VJP</strong>.
+
+                You will use the same initials
+                to access criteria weighting later.
+
+            </p>
+
+            <div class="participant-initials-form">
+
+                <label
+                    for="participantInitialsInput">
+
+                    Full-name initials
+
+                </label>
+
+                <input
+                    id="participantInitialsInput"
+                    type="text"
+                    inputmode="text"
+                    autocomplete="off"
+                    autocapitalize="characters"
+                    maxlength="8"
+                    placeholder="Example: VJP">
+
+                <p
+                    id="participantInitialsStatus"
+                    class="participant-initials-status">
+
+                    ${message}
+
+                </p>
+
+                <div class="button-row">
+
+                    <button
+                        id="continueToScoringBtn"
+                        class="app-button app-button-primary"
+                        type="button">
+
+                        Continue to Scoring
+
+                        <span
+                            class="button-arrow"
+                            aria-hidden="true">
+                            →
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+    const input =
+        document.getElementById(
+            "participantInitialsInput"
+        );
+
+    input.focus();
+
+    input.addEventListener(
+        "input",
+        () => {
+
+            input.value =
+                normaliseInitials(
+                    input.value
+                );
+
+        }
+    );
+
+    document
+        .getElementById(
+            "continueToScoringBtn"
+        )
+        .addEventListener(
+            "click",
+            checkInitialsAndStartScoring
+        );
+
+}
+
+async function checkInitialsAndStartScoring() {
+
+    const input =
+        document.getElementById(
+            "participantInitialsInput"
+        );
+
+    const statusElement =
+        document.getElementById(
+            "participantInitialsStatus"
+        );
+
+    const button =
+        document.getElementById(
+            "continueToScoringBtn"
+        );
+
+    const initials =
+        normaliseInitials(
+            input.value
+        );
+
+    if (
+        initials.length < 2
+    ) {
+
+        statusElement.textContent =
+            "Enter at least two initials.";
+
+        return;
+
+    }
+
+    button.disabled =
+        true;
+
+    statusElement.textContent =
+        "Checking initials...";
+
+    const proposedParticipantId =
+        buildParticipantIdFromInitials(
+            initials
+        );
+
+    participantId =
+        proposedParticipantId;
+
+    try {
+
+        const status =
+            await getParticipantSubmissionStatus();
+
+        if (
+            status.scoringPathwayCount > 0
+        ) {
+
+            participantId =
+                "";
+
+            statusElement.textContent =
+                "These initials have already been used " +
+                "in this workshop. Add another letter, " +
+                "such as the second letter of your surname.";
+
+            button.disabled =
+                false;
+
+            return;
+
+        }
+
+        storeParticipantIdentity(
+            initials
+        );
+
+        currentPathway =
+            0;
+
+        renderPathway();
+
+    }
+
+    catch (error) {
+
+        participantId =
+            "";
+
+        console.error(
+            "Initials check error:",
+            error
+        );
+
+        statusElement.textContent =
+            "Initials could not be checked. Try again.";
+
+        button.disabled =
+            false;
+
+    }
+
+}
+
+function renderInitialsConfirmation(
+    initials
+) {
+
+    const survey =
+        document.getElementById(
+            "survey"
+        );
+
+    survey.innerHTML = `
+
+        <div class="card">
+
+            <h2>
+                Continue as ${initials}?
+            </h2>
+
+            <p>
+                This device is currently linked
+                to participant initials
+                <strong>${initials}</strong>.
+            </p>
+
+            <div class="button-row">
+
+                <button
+                    id="confirmInitialsBtn"
+                    class="app-button app-button-primary"
+                    type="button">
+
+                    Continue Scoring
+
+                </button>
+
+                <button
+                    id="changeInitialsBtn"
+                    class="app-button"
+                    type="button">
+
+                    Use Different Initials
+
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+    document
+        .getElementById(
+            "confirmInitialsBtn"
+        )
+        .addEventListener(
+            "click",
+            renderPathway
+        );
+
+    document
+        .getElementById(
+            "changeInitialsBtn"
+        )
+        .addEventListener(
+            "click",
+            clearStoredParticipantIdentity
+        );
+
+}
+
+function clearStoredParticipantIdentity() {
+
+    localStorage.removeItem(
+        `participantId_${workshopId}`
+    );
+
+    sessionStorage.removeItem(
+        `participantId_${workshopId}`
+    );
+
+    localStorage.removeItem(
+        `participantInitials_${workshopId}`
+    );
+
+    sessionStorage.removeItem(
+        `participantInitials_${workshopId}`
+    );
+
+    participantId =
+        "";
+
+    renderInitialsEntry();
+
+}
+
+function normaliseInitials(value) {
+
+    return String(
+        value || ""
+    )
+        .toUpperCase()
+        .replace(
+            /[^A-Z]/g,
+            ""
+        )
+        .slice(
+            0,
+            8
+        );
+
+}
+
+function buildParticipantIdFromInitials(
+    initials
+) {
+
+    return (
+        workshopId +
+        "-P-" +
+        normaliseInitials(
+            initials
+        )
+    );
+
+}
+
+function getStoredParticipantInitials() {
+
+    const participantInitialsKey =
+        `participantInitials_${workshopId}`;
+
+    return normaliseInitials(
+
+        localStorage.getItem(
+            participantInitialsKey
+        ) ||
+
+        sessionStorage.getItem(
+            participantInitialsKey
+        ) ||
+
+        ""
+
+    );
+
+}
+
+function storeParticipantIdentity(
+    initials
+) {
+
+    const cleanInitials =
+        normaliseInitials(
+            initials
+        );
+
+    const newParticipantId =
+        buildParticipantIdFromInitials(
+            cleanInitials
+        );
+
+    const participantIdKey =
+        `participantId_${workshopId}`;
+
+    const participantInitialsKey =
+        `participantInitials_${workshopId}`;
+
+    participantId =
+        newParticipantId;
+
+    localStorage.setItem(
+        participantIdKey,
+        participantId
+    );
+
+    sessionStorage.setItem(
+        participantIdKey,
+        participantId
+    );
+
+    localStorage.setItem(
+        participantInitialsKey,
+        cleanInitials
+    );
+
+    sessionStorage.setItem(
+        participantInitialsKey,
+        cleanInitials
+    );
+
+    return participantId;
 
 }
 
@@ -738,20 +1262,14 @@ async function loadWorkshopConfiguration() {
         const participantIdKey =
             `participantId_${workshopId}`;
         
-        const participantCodeKey =
-            `participantCode_${workshopId}`;
-        
         const storedParticipantId =
+        
             localStorage.getItem(
                 participantIdKey
             ) ||
+        
             sessionStorage.getItem(
                 participantIdKey
-            );
-        
-        const storedParticipantCode =
-            localStorage.getItem(
-                participantCodeKey
             );
         
         if (storedParticipantId) {
@@ -759,47 +1277,12 @@ async function loadWorkshopConfiguration() {
             participantId =
                 storedParticipantId;
         
-        } else if (
-            accessPhase ===
-            "scoring"
-        ) {
-        
-            const participantCode =
-                storedParticipantCode ||
-                createParticipantCode();
-        
-            participantId =
-                workshopId +
-                "-P-" +
-                participantCode;
-        
-            localStorage.setItem(
-                participantIdKey,
-                participantId
-            );
-
-            sessionStorage.setItem(
-                participantIdKey,
-                participantId
-            );
-        
-            localStorage.setItem(
-                participantCodeKey,
-                participantCode
-            );
-
-            sessionStorage.setItem(
-                participantCodeKey,
-                participantCode
-            );
-                    
         } else {
         
             participantId =
                 "";
-
+        
         }
-
 
     return data;
 
@@ -1389,13 +1872,8 @@ function renderScoringComplete() {
             "survey"
         );
 
-    const participantCodeKey =
-        `participantCode_${workshopId}`;
-
-    const participantCode =
-        localStorage.getItem(
-            participantCodeKey
-        ) ||
+    const participantInitials =
+        getStoredParticipantInitials() ||
         participantId
             .split("-P-")
             .pop();
@@ -1416,21 +1894,21 @@ function renderScoringComplete() {
             <div class="participant-code-card">
 
                 <p>
-                    Keep this code for
-                    criteria weighting:
+                    Your initials for
+                    criteria weighting are:
                 </p>
 
                 <strong class="participant-code">
 
-                    ${participantCode}
+                    ${participantInitials}
 
                 </strong>
 
                 <p class="participant-code-note">
 
-                    Take a screenshot or write down
-                    this code. The code may be needed
-                    when scanning the weighting QR code.
+                    Enter these same initials
+                    if the weighting page asks
+                    for participant identification.
 
                 </p>
 
