@@ -18,7 +18,9 @@
         rel="stylesheet"
         href="style.css">
 
-    https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js </script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">
+    </script>
 
 </head>
 
@@ -110,134 +112,129 @@
 
     </main>
 
-       <script>
-    
+    <script>
+
         document.addEventListener(
             "DOMContentLoaded",
             function () {
-    
-                const SITE_BASE_URL =
+
+                const siteBaseUrl =
                     "https://vjulianipereira.github.io/pathways-workshop/";
-    
+
                 const scoringUrl =
-                    SITE_BASE_URL +
+                    siteBaseUrl +
                     "index.html?phase=scoring";
-    
+
                 const weightingUrl =
-                    SITE_BASE_URL +
+                    siteBaseUrl +
                     "index.html?phase=weighting";
-    
+
                 const scoringLink =
                     document.getElementById(
                         "scoringLink"
                     );
-    
+
                 const weightingLink =
                     document.getElementById(
                         "weightingLink"
                     );
-    
+
                 const scoringContainer =
                     document.getElementById(
                         "scoringQrCode"
                     );
-    
+
                 const weightingContainer =
                     document.getElementById(
                         "weightingQrCode"
                     );
-    
+
                 scoringLink.href =
                     scoringUrl;
-    
+
                 weightingLink.href =
                     weightingUrl;
-    
+
                 if (
                     typeof QRCode ===
                     "undefined"
                 ) {
-    
+
                     scoringContainer.textContent =
                         "QR-code library could not be loaded.";
-    
+
                     weightingContainer.textContent =
                         "QR-code library could not be loaded.";
-    
+
                     console.error(
-                        "QRCode is not defined. Check the QRCode library script element."
+                        "QRCode library is unavailable."
                     );
-    
+
                     return;
-    
+
                 }
-    
-                scoringContainer.innerHTML =
-                    "";
-    
-                weightingContainer.innerHTML =
-                    "";
-    
+
                 new QRCode(
                     scoringContainer,
                     {
                         text:
                             scoringUrl,
-    
+
                         width:
                             240,
-    
+
                         height:
                             240,
-    
+
                         colorDark:
                             "#111827",
-    
+
                         colorLight:
                             "#ffffff",
-    
+
                         correctLevel:
                             QRCode.CorrectLevel.H
                     }
                 );
-    
+
                 new QRCode(
                     weightingContainer,
                     {
                         text:
                             weightingUrl,
-    
+
                         width:
                             240,
-    
+
                         height:
                             240,
-    
+
                         colorDark:
                             "#111827",
-    
+
                         colorLight:
                             "#ffffff",
-    
+
                         correctLevel:
                             QRCode.CorrectLevel.H
                     }
                 );
-    
+
                 console.log(
                     "Scoring QR URL:",
                     scoringUrl
                 );
-    
+
                 console.log(
                     "Weighting QR URL:",
                     weightingUrl
                 );
-    
+
             }
         );
-    
+
     </script>
+
 </body>
 
 </html>
