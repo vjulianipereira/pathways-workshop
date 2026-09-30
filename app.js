@@ -1715,40 +1715,6 @@ function calculateWeightedAverage(pathway) {
 
 }
 
-function buildWeightedResults() {
-
-    const weightedResults =
-        {};
-
-    pathways.forEach(pathway => {
-
-        const unweighted =
-            calculateUnweightedAverage(
-                pathway
-            );
-
-        const weighted =
-            calculateWeightedAverage(
-                pathway
-            );
-
-        weightedResults[pathway] = {
-
-            weighted:
-                weighted,
-
-            difference:
-                weighted -
-                unweighted
-
-        };
-
-    });
-
-    return weightedResults;
-
-}
-
 async function submitSurvey() {
 
         if (
@@ -1799,26 +1765,20 @@ async function submitSurvey() {
         
                 }
         
-                const weightedResults =
-                    buildWeightedResults();
-        
                 const payload = {
-        
+                
                     action:
                         "submitWeighting",
-        
+                
                     workshopId:
                         workshopId,
-        
+                
                     participantId:
                         participantId,
-        
+                
                     weights:
-                        weights,
-        
-                    weightedResults:
-                        weightedResults
-        
+                        weights
+                
                 };
         
                 console.log(
