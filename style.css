@@ -1,3 +1,83 @@
+/* ===== FACILITATOR QR ACCESS ===== */
+
+.facilitator-access-page {
+    width: min(1200px, 96vw);
+    margin: 0 auto;
+}
+
+.facilitator-access-header {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.qr-code-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 28px;
+}
+
+.qr-code-card {
+    padding: 28px;
+
+    background: #ffffff;
+    border: 1px solid #dbeafe;
+    border-radius: 16px;
+
+    box-shadow:
+        0 6px 18px
+        rgba(15, 23, 42, 0.08);
+
+    text-align: center;
+}
+
+.qr-code-step {
+    display: inline-block;
+
+    margin: 0 0 8px;
+    padding: 5px 10px;
+
+    color: #1d4ed8;
+    background: #dbeafe;
+
+    border-radius: 999px;
+
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.qr-code-container {
+    display: flex;
+    justify-content: center;
+
+    margin: 24px auto;
+}
+
+.qr-code-container img,
+.qr-code-container canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+.participant-access-link {
+    display: inline-block;
+
+    color: #1d4ed8;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+
+    .qr-code-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
 /* ===== GENERAL ===== */
 
 * {
