@@ -14,6 +14,10 @@ const accessPhase =
     .trim()
     .toLowerCase();
 
+const MIN_INITIALS_LENGTH = 2;
+
+const MAX_INITIALS_LENGTH = 8;
+
 const pathways = [
     "Optimise Flexibility",
     "Monetise Flexibility",
@@ -361,8 +365,10 @@ function renderParticipantCodeEntry() {
             </h2>
 
             <p>
-                Enter the same full-name initials
-                used for pathway scoring.
+                Enter the same initials used
+                for pathway scoring.
+                The entry must contain at least
+                <strong>${MIN_INITIALS_LENGTH} letters</strong>.
             </p>
 
             <p class="initials-guidance">
@@ -383,14 +389,16 @@ function renderParticipantCodeEntry() {
 
                 </label>
 
-                <input
+                 <input
                     id="participantInitialsInput"
                     type="text"
                     inputmode="text"
                     autocomplete="off"
                     autocapitalize="characters"
-                    maxlength="8"
-                    placeholder="Example: VJP">
+                    minlength="${MIN_INITIALS_LENGTH}"
+                    maxlength="${MAX_INITIALS_LENGTH}"
+                    placeholder="Example: VJP"
+                    required>
 
                 <p
                     id="participantInitialsStatus"
@@ -469,14 +477,31 @@ async function recoverParticipantByInitials() {
         );
 
     if (
-        initials.length <= 2
+        initials.length <
+        MIN_INITIALS_LENGTH
     ) {
-
+    
         statusElement.textContent =
-            "Enter the initials used during scoring.";
-
+            `Enter at least ${MIN_INITIALS_LENGTH} letters.`;
+    
+        input.focus();
+    
         return;
+    
+    }
 
+    if (
+    initials.length >
+    MAX_INITIALS_LENGTH
+    ) {
+    
+        statusElement.textContent =
+            `Enter no more than ${MAX_INITIALS_LENGTH} letters.`;
+    
+        input.focus();
+    
+        return;
+    
     }
 
     button.disabled =
@@ -816,7 +841,7 @@ function renderInitialsEntry(
             </h2>
 
             <p>
-                Enter the initials of your full name.
+                Enter the initials of your full name, including your middle name if applicable. Use at least <strong>${MIN_INITIALS_LENGTH} letters</strong>.
             </p>
 
             <p class="initials-guidance">
@@ -826,8 +851,7 @@ function renderInitialsEntry(
 
                 <strong>VJP</strong>.
 
-                You will use the same initials
-                to access criteria weighting later.
+                You will use the same initials later.
 
             </p>
 
@@ -846,8 +870,10 @@ function renderInitialsEntry(
                     inputmode="text"
                     autocomplete="off"
                     autocapitalize="characters"
-                    maxlength="8"
-                    placeholder="Example: VJP">
+                    minlength="${MIN_INITIALS_LENGTH}"
+                    maxlength="${MAX_INITIALS_LENGTH}"
+                    placeholder="Example: VJP"
+                    required>
 
                 <p
                     id="participantInitialsStatus"
@@ -934,16 +960,32 @@ async function checkInitialsAndStartScoring() {
             input.value
         );
 
-    if (
-        initials.length <= 2
-    ) {
-
-        statusElement.textContent =
-            "Enter at least two initials.";
-
-        return;
-
-    }
+        if (
+            initials.length <
+            MIN_INITIALS_LENGTH
+        ) {
+        
+            statusElement.textContent =
+                `Enter at least ${MIN_INITIALS_LENGTH} letters.`;
+        
+            input.focus();
+        
+            return;
+        
+        }
+            if (
+            initials.length >
+            MAX_INITIALS_LENGTH
+        ) {
+        
+            statusElement.textContent =
+                `Enter no more than ${MAX_INITIALS_LENGTH} letters.`;
+        
+            input.focus();
+        
+            return;
+        
+        }
 
     button.disabled =
         true;
@@ -1120,7 +1162,7 @@ function normaliseInitials(value) {
         )
         .slice(
             0,
-            8
+            MAX_INITIALS_LENGTH
         );
 
 }
